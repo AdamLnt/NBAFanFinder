@@ -5,7 +5,7 @@ This project uses different technologies:
 | **Part** | Technologies |
 | ----------- | ----------- |
 | **Backend** | [Java Spring Boot](https://spring.io/projects/spring-boot), [Maven](https://maven.apache.org/) |
-| **Frontend** | [React](https://react.dev), [Vite](https://vitejs.fr) |
+| **Frontend** | [React](https://react.dev), [Vite](https://vitejs.fr), [TypeScript](https://www.typescriptlang.org) |
 
 
 ## Prerequisites
