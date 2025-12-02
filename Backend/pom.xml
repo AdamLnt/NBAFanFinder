@@ -8,11 +8,11 @@
 		<version>4.0.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ensitech</groupId>
+	<groupId>com.NBAFanFinder</groupId>
 	<artifactId>Backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Backend</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Bachelor Project</description>
 	<url/>
 	<licenses>
 		<license/>
