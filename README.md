@@ -1,6 +1,11 @@
 # NBAFanFinder
 NBAFanFinder is a website that helps you find other NBA fans near you. You can find them and chat with them.
 
+This project is a 3-tier architecture project composed of:
+1. A frontend
+2. A backend
+3. And Databases
+
 This project uses different technologies:
 | **Part** | Technologies |
 | ----------- | ----------- |
@@ -25,7 +30,7 @@ Note : those are only suggestions, it's a matter of preference
 ### Database
 - Any local database provider such as [XAMPP](https://www.apachefriends.org/fr/index.html)
 
-## Cloner le projet
+## Cloner the project
 ```bash
   git clone https://github.com/AdamLnt/NBAFanFinder.git
   cd NBAFanFinder
