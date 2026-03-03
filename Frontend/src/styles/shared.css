@@ -1,0 +1,19 @@
+.page-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EAEEF3;
+  padding: 48px 16px;
+}
+
+.error-box {
+  background: #FEE2E2;
+  color: #991B1B;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Outfit', sans-serif;
+  margin-bottom: 16px;
+  text-align: center;
+}

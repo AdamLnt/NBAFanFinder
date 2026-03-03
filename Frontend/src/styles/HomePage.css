@@ -1,0 +1,35 @@
+.home-card-content {
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  margin-bottom: 24px;
+}
+
+.home-success-badge {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #D1FAE5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 40px;
+}
+
+.home-connected-msg {
+  color: #065F46;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.home-user-info {
+  color: #1B3A6B;
+  font-size: 15px;
+  margin-top: 16px;
+  line-height: 1.6;
+}
+
+.home-user-info p {
+  margin-bottom: 4px;
+}

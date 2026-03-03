@@ -3,21 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Card, Title, Field, SubmitButton, LinkText, Label } from "../components/FormComponents";
-import { palette } from "../styles/palette";
 import { apiService } from "../services/apiService";
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px 14px",
-  border: `1.5px solid ${palette.border}`,
-  borderRadius: 8,
-  fontSize: 15,
-  fontFamily: "'Outfit', sans-serif",
-  outline: "none",
-  boxSizing: "border-box" as const,
-  color: palette.text,
-  transition: "border-color .2s",
-};
+import "../styles/FormComponents.css";
+import "../styles/shared.css";
+import "../styles/RegisterPage.css";
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
@@ -34,11 +23,10 @@ export const RegisterPage = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setError(null); // Effacer l'erreur lors de la saisie
+    setError(null);
   };
 
   const handleSubmit = async () => {
-    // Validation basique
     if (!form.nom || !form.prenom || !form.email || !form.password || !form.confirmation) {
       setError("Veuillez remplir tous les champs obligatoires");
       return;
@@ -53,7 +41,6 @@ export const RegisterPage = () => {
     setError(null);
 
     try {
-      // Appel à l'API d'inscription
       const response = await apiService.register({
         nom: form.nom,
         prenom: form.prenom,
@@ -61,9 +48,6 @@ export const RegisterPage = () => {
         password: form.password,
         dateNaissance: form.dateNaissance || undefined,
       });
-
-      // Le compte est créé mais pas encore activé
-      // Rediriger vers la page d'activation avec l'ID utilisateur
       navigate(`/activation/${response.id}`);
     } catch (err: any) {
       setError(err.message || "Erreur lors de l'inscription");
@@ -76,16 +60,7 @@ export const RegisterPage = () => {
     <>
       <Header onNavigateToLogin={() => navigate("/login")} />
 
-      <main
-        style={{
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: palette.bg,
-          padding: "36px 16px",
-        }}
-      >
+      <main className="register-main">
         <Card>
           <Title>Inscription</Title>
           <Field
@@ -110,16 +85,14 @@ export const RegisterPage = () => {
             value={form.email}
             onChange={handleChange}
           />
-          <div style={{ marginBottom: 18 }}>
+          <div className="form-field">
             <Label>Date de naissance</Label>
             <input
               type="date"
               name="dateNaissance"
               value={form.dateNaissance}
               onChange={handleChange}
-              style={inputStyle}
-              onFocus={(e) => (e.currentTarget.style.borderColor = palette.navy)}
-              onBlur={(e) => (e.currentTarget.style.borderColor = palette.border)}
+              className="form-input"
             />
           </div>
           <Field
@@ -139,23 +112,7 @@ export const RegisterPage = () => {
             onChange={handleChange}
           />
 
-          {/* Message d'erreur */}
-          {error && (
-            <div
-              style={{
-                background: "#FEE2E2",
-                color: "#991B1B",
-                padding: "12px 16px",
-                borderRadius: 8,
-                fontSize: 14,
-                fontFamily: "'Outfit', sans-serif",
-                marginBottom: 16,
-                textAlign: "center",
-              }}
-            >
-              {error}
-            </div>
-          )}
+          {error && <div className="error-box">{error}</div>}
 
           <SubmitButton onClick={handleSubmit}>
             {loading ? "Inscription en cours..." : "S'inscrire"}
