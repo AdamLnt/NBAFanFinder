@@ -1,0 +1,47 @@
+.map-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.map-sidebar {
+  width: 280px;
+  background: #FFFFFF;
+  border-right: 1px solid #D1D5DB;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.map-sidebar__search-wrapper {
+  padding: 14px 16px;
+  border-bottom: 1px solid #D1D5DB;
+}
+
+.map-search-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Outfit', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  color: #1B3A6B;
+}
+
+.map-search-input:focus {
+  border-color: #1B3A6B;
+}
+
+.map-container {
+  flex: 1;
+  height: 100%;
+}

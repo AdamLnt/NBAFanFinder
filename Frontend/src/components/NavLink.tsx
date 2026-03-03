@@ -1,4 +1,4 @@
-import { palette } from "../styles/palette";
+import "../styles/NavLink.css";
 
 interface NavLinkProps {
   label: string;
@@ -9,17 +9,7 @@ interface NavLinkProps {
 export const NavLink = ({ label, onClick, active }: NavLinkProps) => (
   <button
     onClick={onClick}
-    style={{
-      background: "none",
-      border: "none",
-      color: palette.white,
-      fontSize: 18,
-      fontFamily: "'Outfit', sans-serif",
-      fontWeight: active ? 700 : 500,
-      cursor: "pointer",
-      textDecoration: active ? "underline" : "none",
-      textUnderlineOffset: 4,
-    }}
+    className={active ? "nav-link nav-link--active" : "nav-link"}
   >
     {label}
   </button>

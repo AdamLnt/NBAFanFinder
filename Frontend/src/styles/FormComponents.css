@@ -1,0 +1,82 @@
+.card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 36px 40px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 4px 24px rgba(27, 58, 107, 0.08);
+}
+
+.card__title {
+  text-align: center;
+  color: #1B3A6B;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  font-style: italic;
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1B3A6B;
+  margin-bottom: 6px;
+}
+
+.form-field {
+  margin-bottom: 18px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: 'Outfit', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  color: #1B3A6B;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: #1B3A6B;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px 0;
+  background: #1B3A6B;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover {
+  background: #142D54;
+}
+
+.link-text {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+  color: #6B7280;
+}
+
+.link-text__action {
+  color: #1B3A6B;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}

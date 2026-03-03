@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Card, Title, Field, SubmitButton, LinkText } from "../components/FormComponents";
-import { palette } from "../styles/palette";
 import { apiService } from "../services/apiService";
 import { authService } from "../services/authService";
+import "../styles/shared.css";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -15,11 +15,10 @@ export const LoginPage = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setError(null); // Effacer l'erreur lors de la saisie
+    setError(null);
   };
 
   const handleSubmit = async () => {
-    // Validation basique
     if (!form.email || !form.password) {
       setError("Veuillez remplir tous les champs");
       return;
@@ -29,14 +28,9 @@ export const LoginPage = () => {
     setError(null);
 
     try {
-      // Appel à l'API de connexion
       const response = await apiService.login(form);
-
-      // Stocker le token et les informations utilisateur
       authService.setAuth(response);
-
-      // Rediriger vers la page d'accueil
-      navigate("/home");
+      navigate("/map");
     } catch (err: any) {
       setError(err.message || "Erreur lors de la connexion");
     } finally {
@@ -48,16 +42,7 @@ export const LoginPage = () => {
     <>
       <Header onNavigateToLogin={() => navigate("/login")} />
 
-      <main
-        style={{
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: palette.bg,
-          padding: "48px 16px",
-        }}
-      >
+      <main className="page-main">
         <Card>
           <Title>Connexion</Title>
           <Field
@@ -77,23 +62,7 @@ export const LoginPage = () => {
             onChange={handleChange}
           />
 
-          {/* Message d'erreur */}
-          {error && (
-            <div
-              style={{
-                background: "#FEE2E2",
-                color: "#991B1B",
-                padding: "12px 16px",
-                borderRadius: 8,
-                fontSize: 14,
-                fontFamily: "'Outfit', sans-serif",
-                marginBottom: 16,
-                textAlign: "center",
-              }}
-            >
-              {error}
-            </div>
-          )}
+          {error && <div className="error-box">{error}</div>}
 
           <SubmitButton onClick={handleSubmit}>
             {loading ? "Connexion en cours..." : "Se connecter"}

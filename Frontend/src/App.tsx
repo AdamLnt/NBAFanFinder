@@ -3,6 +3,9 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ActivationPage } from "./pages/ActivationPage";
 import { HomePage } from "./pages/HomePage";
+import { MapPage } from "./pages/MapPage";
+import { ChatPage } from "./pages/ChatPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { palette } from "./styles/palette";
 
 function App() {
@@ -28,7 +31,9 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/activation/:userId" element={<ActivationPage />} />
-            <Route path="/home" element={<HomePage />} />
+            <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+            <Route path="/map" element={<ProtectedRoute><MapPage /></ProtectedRoute>} />
+            <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
             <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>
         </div>

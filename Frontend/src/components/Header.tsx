@@ -1,85 +1,46 @@
-import { palette } from "../styles/palette";
+import { useNavigate } from "react-router-dom";
+import { authService } from "../services/authService";
 import logoSvg from "../assets/logo.svg";
 import userPng from "../assets/user.png";
+import { MapIcon } from "./icons/MapIcon";
+import { ChatIcon } from "./icons/ChatIcon";
+import "../styles/Header.css";
 
 interface HeaderProps {
   onNavigateToLogin?: () => void;
 }
 
-export const Header = ({ onNavigateToLogin }: HeaderProps) => (
-  <header
-    style={{
-      background: palette.navy,
-      padding: "14px 32px",
-    }}
-  >
-    {/* Rectangle blanc qui englobe tout */}
-    <div
-      style={{
-        background: palette.white,
-        borderRadius: 12,
-        padding: "12px 24px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
-      {/* Logo à gauche */}
-      <img src={logoSvg} alt="NBA Fan Finder" style={{ height: 52 }} />
+export const Header = ({ onNavigateToLogin }: HeaderProps) => {
+  const navigate = useNavigate();
 
-      {/* Boutons au centre */}
-      <div
-        style={{
-          display: "flex",
-          gap: 52,
-          alignItems: "center",
-          position: "absolute",
-          left: "50%",
-          transform: "translateX(-50%)",
-        }}
-      >
-        <button
-          style={{
-            background: "none",
-            border: "none",
-            color: palette.navy,
-            fontSize: 30,
-            fontFamily: "'Outfit', sans-serif",
-            fontWeight: 600,
-            cursor: "pointer",
-            padding: "8px 16px",
-          }}
-        >
-          Carte
+  return (
+    <header className="header">
+      <div className="header__left">
+        <img src={logoSvg} alt="NBA Fan Finder" className="header__logo" />
+
+        <button onClick={() => navigate("/map")} className="header__nav-btn">
+          <MapIcon />
         </button>
-        <button
-          style={{
-            background: "none",
-            border: "none",
-            color: palette.navy,
-            fontSize: 30,
-            fontFamily: "'Outfit', sans-serif",
-            fontWeight: 600,
-            cursor: "pointer",
-            padding: "8px 16px",
-          }}
-        >
-          Chat
+
+        <button onClick={() => navigate("/chat")} className="header__nav-btn">
+          <ChatIcon />
         </button>
       </div>
 
-      {/* Icône utilisateur à droite */}
-      <img
-        src={userPng}
-        alt="Compte"
-        onClick={onNavigateToLogin}
-        style={{
-          height: 40,
-          width: 40,
-          cursor: "pointer",
-          borderRadius: "50%",
-        }}
-      />
-    </div>
-  </header>
-);
+      <div className="header__right">
+        <img
+          src={userPng}
+          alt="Compte"
+          onClick={onNavigateToLogin}
+          className="header__user-avatar"
+        />
+        <button
+          onClick={() => { authService.logout(); navigate("/login"); }}
+          className="header__logout-btn"
+        >
+          Déconnexion
+        </button>
+      </div>
+    </header>
+  );
+};
