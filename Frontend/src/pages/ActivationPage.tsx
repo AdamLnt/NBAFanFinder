@@ -39,7 +39,7 @@ export const ActivationPage = () => {
 
   return (
     <>
-      <Header onNavigateToLogin={() => navigate("/login")} />
+      <Header />
 
       <main className="page-main">
         <Card>

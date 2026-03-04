@@ -40,7 +40,7 @@ export const LoginPage = () => {
 
   return (
     <>
-      <Header onNavigateToLogin={() => navigate("/login")} />
+      <Header />
 
       <main className="page-main">
         <Card>

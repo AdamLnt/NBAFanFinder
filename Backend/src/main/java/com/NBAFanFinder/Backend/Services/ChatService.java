@@ -46,6 +46,16 @@ public class ChatService {
         proprietaire.getChatsPossedes().add(chat);
         userRepository.save(proprietaire);
 
+        if (request.membresIds() != null) {
+            for (Long membreId : request.membresIds()) {
+                if (membreId == request.userId()) continue;
+                User membre = userRepository.findById(membreId)
+                    .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé: " + membreId));
+                membre.getChatsRejoints().add(chat);
+                userRepository.save(membre);
+            }
+        }
+
     }
 
     public void joinChat(JoinChatRequest request) {
