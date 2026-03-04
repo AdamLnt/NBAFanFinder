@@ -1,6 +1,7 @@
 package com.NBAFanFinder.Backend.Controllers;
 
-import com.NBAFanFinder.Backend.Entities.User;
+import com.NBAFanFinder.Backend.DTOs.Users.AllUsersResponse;
+import com.NBAFanFinder.Backend.DTOs.Users.UserResponse;
 import com.NBAFanFinder.Backend.Services.UserService;
 
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAll();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<List<AllUsersResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/ping")
@@ -31,8 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.findById(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 }

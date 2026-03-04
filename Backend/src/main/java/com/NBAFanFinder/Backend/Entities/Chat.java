@@ -19,9 +19,6 @@ public class Chat {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "nombre_participants", nullable = false)
-    private Integer nombreParticipants = 0;
-
     @ManyToMany(mappedBy = "chatsPossedes")
     private Set<User> proprietaires = new HashSet<>();
 
@@ -38,7 +35,6 @@ public class Chat {
     public Chat(String nom, String description) {
         this.nom = nom;
         this.description = description;
-        this.nombreParticipants = 0;
     }
 
     // Getters et Setters
@@ -64,14 +60,6 @@ public class Chat {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Integer getNombreParticipants() {
-        return nombreParticipants;
-    }
-
-    public void setNombreParticipants(Integer nombreParticipants) {
-        this.nombreParticipants = nombreParticipants;
     }
 
     public Set<User> getProprietaires() {

@@ -1,6 +1,5 @@
 package com.NBAFanFinder.Backend.Entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -25,7 +24,6 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Accepte en entrée, jamais exposé en sortie
     private String password;
 
     @Column(name = "date_naissance")

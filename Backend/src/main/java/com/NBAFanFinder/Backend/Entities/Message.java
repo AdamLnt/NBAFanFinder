@@ -38,6 +38,13 @@ public class Message {
         this.dateEnvoi = LocalDateTime.now();
     }
 
+    public Message(String texte, Chat chat, User utilisateur, LocalDateTime dateEnvoi) {
+        this.texte = texte;
+        this.chat = chat;
+        this.utilisateur = utilisateur;
+        this.dateEnvoi = dateEnvoi;
+    }
+
     // Getters et Setters
     public Long getId() {
         return id;
