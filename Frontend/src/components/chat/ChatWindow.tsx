@@ -9,6 +9,7 @@ interface Props {
   loading: boolean;
   users: User[];
   onStartChat: (user: User) => Promise<void>;
+  onOpenSettings: () => void;
 }
 
 function parseDate(dateEnvoi: number[] | string): Date {
@@ -33,7 +34,7 @@ function MemberItem({ member, isOwner }: { member: ChatMember; isOwner: boolean 
   );
 }
 
-export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loading, users, onStartChat }: Props) => {
+export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loading, users, onStartChat, onOpenSettings }: Props) => {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
@@ -116,6 +117,18 @@ export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loadi
           <h3 className="chat-window__header-name">{chat.nom}</h3>
           <p className="chat-window__header-desc">{chat.description}</p>
         </div>
+        {chat.proprietaires.some((p) => p.id === currentUserId) && (
+          <button
+            className="chat-window__settings-btn"
+            onClick={onOpenSettings}
+            title="Paramètres du chat"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </button>
+        )}
         <button
           className={`chat-window__members-btn${showMembers ? " chat-window__members-btn--active" : ""}`}
           onClick={() => setShowMembers((v) => !v)}

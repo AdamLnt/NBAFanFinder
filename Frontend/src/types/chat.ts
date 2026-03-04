@@ -35,6 +35,7 @@ export interface CreateChatRequest {
   description: string;
   userId: number;
   membresIds: number[];
+  proprietairesIds?: number[];
 }
 
 export interface JoinChatRequest {
@@ -46,4 +47,10 @@ export interface SendMessageRequest {
   chatId: number;
   userId: number;
   texte: string;
+}
+
+export interface UpdateChatRequest {
+  nom?: string;
+  description?: string;
+  requestUserId: number;
 }

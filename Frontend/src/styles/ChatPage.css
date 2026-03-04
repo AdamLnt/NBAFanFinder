@@ -692,6 +692,65 @@
   cursor: not-allowed;
 }
 
+/* ── Settings button ─────────────────────────────────── */
+.chat-window__settings-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  background: transparent;
+  color: #1b3a6b;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.chat-window__settings-btn:hover {
+  background: #eaeef3;
+  border-color: #1b3a6b;
+}
+
+/* ── Edit modal member row ───────────────────────────── */
+.modal__member-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+}
+
+.modal__member-item:not(:last-child) {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.member-remove-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: none;
+  border: 1.5px solid #fca5a5;
+  color: #ef4444;
+  font-size: 12px;
+  font-family: "Outfit", sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.member-remove-btn:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+.member-remove-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ── User picker ─────────────────────────────────────── */
 .modal__label-count {
   font-weight: 400;

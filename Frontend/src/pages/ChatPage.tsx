@@ -4,6 +4,7 @@ import { Footer } from "../components/Footer";
 import { ChatSidebar } from "../components/chat/ChatSidebar";
 import { ChatWindow } from "../components/chat/ChatWindow";
 import { CreateChatModal } from "../components/chat/CreateChatModal";
+import { EditChatModal } from "../components/chat/EditChatModal";
 import { chatApiService } from "../services/chatApiService";
 import { authService } from "../services/authService";
 import type { Chat, Message, User } from "../types/chat";
@@ -18,6 +19,7 @@ export const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [loadingChats, setLoadingChats] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const selectedChatRef = useRef<Chat | null>(null);
@@ -110,7 +112,8 @@ export const ChatPage = () => {
       nom: `${targetUser.prenom} ${targetUser.nom}`,
       description: "Chat direct",
       userId,
-      membresIds: [targetUser.id],
+      membresIds: [],
+      proprietairesIds: [targetUser.id],
     });
     const updated = await chatApiService.getChats(userId);
     setChats(updated);
@@ -123,6 +126,24 @@ export const ChatPage = () => {
     setModalOpen(false);
     const updated = await chatApiService.getChats(userId);
     setChats(updated);
+  };
+
+  const handleUpdateChat = async (nom: string, description: string) => {
+    if (!selectedChat) return;
+    await chatApiService.updateChat(selectedChat.id, { nom, description, requestUserId: userId });
+    const updated = await chatApiService.getChats(userId);
+    setChats(updated);
+    const updatedChat = updated.find((c) => c.id === selectedChat.id);
+    if (updatedChat) setSelectedChat(updatedChat);
+  };
+
+  const handleRemoveMember = async (memberId: number) => {
+    if (!selectedChat) return;
+    await chatApiService.removeMember(selectedChat.id, memberId, userId);
+    const updated = await chatApiService.getChats(userId);
+    setChats(updated);
+    const updatedChat = updated.find((c) => c.id === selectedChat.id);
+    if (updatedChat) setSelectedChat(updatedChat);
   };
 
   return (
@@ -145,6 +166,7 @@ export const ChatPage = () => {
           loading={loadingMessages}
           users={users}
           onStartChat={handleStartChat}
+          onOpenSettings={() => setEditModalOpen(true)}
         />
       </main>
       {modalOpen && (
@@ -153,6 +175,14 @@ export const ChatPage = () => {
           onClose={() => setModalOpen(false)}
           onCreateChat={handleCreateChat}
           onJoinChat={handleJoinChat}
+        />
+      )}
+      {editModalOpen && selectedChat && (
+        <EditChatModal
+          chat={selectedChat}
+          onClose={() => setEditModalOpen(false)}
+          onUpdateChat={handleUpdateChat}
+          onRemoveMember={handleRemoveMember}
         />
       )}
       <Footer />

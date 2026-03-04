@@ -8,8 +8,11 @@ import java.util.List;
 import com.NBAFanFinder.Backend.DTOs.Chats.AllChatsResponse;
 import com.NBAFanFinder.Backend.DTOs.Chats.CreateChatRequest;
 import com.NBAFanFinder.Backend.DTOs.Chats.JoinChatRequest;
+import com.NBAFanFinder.Backend.DTOs.Chats.UpdateChatRequest;
 import com.NBAFanFinder.Backend.Entities.Chat;
 import com.NBAFanFinder.Backend.Entities.User;
+import com.NBAFanFinder.Backend.Exceptions.NotFoundException;
+import com.NBAFanFinder.Backend.Exceptions.UnauthorizedException;
 import com.NBAFanFinder.Backend.Repositories.ChatRepository;
 import com.NBAFanFinder.Backend.Repositories.UserRepository;
 
@@ -46,6 +49,16 @@ public class ChatService {
         proprietaire.getChatsPossedes().add(chat);
         userRepository.save(proprietaire);
 
+        if (request.proprietairesIds() != null) {
+            for (Long propId : request.proprietairesIds()) {
+                if (propId == request.userId()) continue;
+                User coProprietaire = userRepository.findById(propId)
+                    .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé: " + propId));
+                coProprietaire.getChatsPossedes().add(chat);
+                userRepository.save(coProprietaire);
+            }
+        }
+
         if (request.membresIds() != null) {
             for (Long membreId : request.membresIds()) {
                 if (membreId == request.userId()) continue;
@@ -64,8 +77,45 @@ public class ChatService {
 
         User user = userRepository.findById(request.userId())
             .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
-        
+
         user.getChatsRejoints().add(chat);
         userRepository.save(user);
+    }
+
+    public void updateChat(long chatId, UpdateChatRequest request) {
+        Chat chat = chatRepository.findById(chatId)
+            .orElseThrow(() -> new NotFoundException("Chat non trouvé"));
+
+        boolean isAdmin = chat.getProprietaires().stream()
+            .anyMatch(p -> p.getId() == request.requestUserId());
+        if (!isAdmin) {
+            throw new UnauthorizedException("Seul un administrateur peut modifier ce chat");
+        }
+
+        if (request.nom() != null && !request.nom().isBlank()) {
+            chat.setNom(request.nom());
+        }
+        if (request.description() != null) {
+            chat.setDescription(request.description());
+        }
+
+        chatRepository.save(chat);
+    }
+
+    public void removeMember(long chatId, long memberId, long requestUserId) {
+        Chat chat = chatRepository.findById(chatId)
+            .orElseThrow(() -> new NotFoundException("Chat non trouvé"));
+
+        boolean isAdmin = chat.getProprietaires().stream()
+            .anyMatch(p -> p.getId() == requestUserId);
+        if (!isAdmin) {
+            throw new UnauthorizedException("Seul un administrateur peut retirer des membres");
+        }
+
+        User member = userRepository.findById(memberId)
+            .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
+
+        member.getChatsRejoints().remove(chat);
+        userRepository.save(member);
     }
 }

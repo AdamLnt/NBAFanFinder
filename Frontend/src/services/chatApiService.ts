@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { AxiosInstance } from "axios";
 import { authService } from "./authService";
-import type { Chat, Message, User, CreateChatRequest, JoinChatRequest, SendMessageRequest } from "../types/chat";
+import type { Chat, Message, User, CreateChatRequest, JoinChatRequest, SendMessageRequest, UpdateChatRequest } from "../types/chat";
 
 const chatClient: AxiosInstance = axios.create({
   baseURL: "http://localhost:8080/api",
@@ -43,5 +43,15 @@ export const chatApiService = {
   async getUsers(): Promise<User[]> {
     const res = await chatClient.get<User[]>("/users");
     return res.data;
+  },
+
+  async updateChat(chatId: number, data: UpdateChatRequest): Promise<void> {
+    await chatClient.patch(`/chat/${chatId}`, data);
+  },
+
+  async removeMember(chatId: number, memberId: number, requestUserId: number): Promise<void> {
+    await chatClient.delete(`/chat/${chatId}/members/${memberId}`, {
+      params: { requestUserId },
+    });
   },
 };
