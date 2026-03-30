@@ -3,7 +3,7 @@ package com.NBAFanFinder.Backend.Controllers;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,6 @@ import com.NBAFanFinder.Backend.Services.MessageService;
 
 @RestController
 @RequestMapping("/api/messages")
-@CrossOrigin(origins = "*")
 public class MessageController {
 
     private final MessageService messageService;
@@ -36,9 +35,13 @@ public class MessageController {
         return ResponseEntity.ok(messageService.getAllMessagesFromChat(chatId));
     }
 
+    private String getAuthenticatedEmail() {
+        return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     @PostMapping("/send")
     public ResponseEntity<String> sendMessage(@RequestBody SendMessageRequest request) {
-        messageService.sendMessage(request);
+        messageService.sendMessage(request, getAuthenticatedEmail());
         return ResponseEntity.ok("Message envoyé!");
     }
 }

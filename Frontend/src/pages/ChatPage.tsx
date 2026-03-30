@@ -45,7 +45,7 @@ export const ChatPage = () => {
   const loadChats = async () => {
     setLoadingChats(true);
     try {
-      const data = await chatApiService.getChats(userId);
+      const data = await chatApiService.getChats();
       setChats(data);
     } catch {
       // erreur silencieuse
@@ -82,24 +82,25 @@ export const ChatPage = () => {
 
   const handleSendMessage = async (text: string) => {
     if (!selectedChat) return;
-    await chatApiService.sendMessage({ chatId: selectedChat.id, userId, texte: text });
+    await chatApiService.sendMessage({ chatId: selectedChat.id, texte: text });
     await loadMessages(selectedChat.id);
   };
 
   const handleCreateChat = async (nom: string, description: string, membresIds: number[]) => {
-    await chatApiService.createChat({ nom, description, userId, membresIds });
+    await chatApiService.createChat({ nom, description, membresIds });
     setModalOpen(false);
-    const updated = await chatApiService.getChats(userId);
+    const updated = await chatApiService.getChats();
     setChats(updated);
   };
 
   const isDirectChatWith = (c: Chat, otherUserId: number) => {
     const total = (c.proprietaires?.length ?? 0) + (c.membres?.length ?? 0);
     if (total !== 2) return false;
-    return (
-      (c.proprietaires.some((p) => p.id === userId) && c.membres.some((m) => m.id === otherUserId)) ||
-      (c.proprietaires.some((p) => p.id === otherUserId) && c.membres.some((m) => m.id === userId))
-    );
+    const allIds = [
+      ...(c.proprietaires ?? []).map((p) => p.id),
+      ...(c.membres ?? []).map((m) => m.id),
+    ];
+    return allIds.includes(userId) && allIds.includes(otherUserId);
   };
 
   const handleStartChat = async (targetUser: User) => {
@@ -111,27 +112,26 @@ export const ChatPage = () => {
     await chatApiService.createChat({
       nom: `${targetUser.prenom} ${targetUser.nom}`,
       description: "Chat direct",
-      userId,
       membresIds: [],
       proprietairesIds: [targetUser.id],
     });
-    const updated = await chatApiService.getChats(userId);
+    const updated = await chatApiService.getChats();
     setChats(updated);
     const newChat = updated.find((c) => isDirectChatWith(c, targetUser.id));
     if (newChat) handleSelectChat(newChat);
   };
 
   const handleJoinChat = async (chatId: number) => {
-    await chatApiService.joinChat({ chatId, userId });
+    await chatApiService.joinChat({ chatId });
     setModalOpen(false);
-    const updated = await chatApiService.getChats(userId);
+    const updated = await chatApiService.getChats();
     setChats(updated);
   };
 
   const handleUpdateChat = async (nom: string, description: string) => {
     if (!selectedChat) return;
-    await chatApiService.updateChat(selectedChat.id, { nom, description, requestUserId: userId });
-    const updated = await chatApiService.getChats(userId);
+    await chatApiService.updateChat(selectedChat.id, { nom, description });
+    const updated = await chatApiService.getChats();
     setChats(updated);
     const updatedChat = updated.find((c) => c.id === selectedChat.id);
     if (updatedChat) setSelectedChat(updatedChat);
@@ -139,8 +139,8 @@ export const ChatPage = () => {
 
   const handleRemoveMember = async (memberId: number) => {
     if (!selectedChat) return;
-    await chatApiService.removeMember(selectedChat.id, memberId, userId);
-    const updated = await chatApiService.getChats(userId);
+    await chatApiService.removeMember(selectedChat.id, memberId);
+    const updated = await chatApiService.getChats();
     setChats(updated);
     const updatedChat = updated.find((c) => c.id === selectedChat.id);
     if (updatedChat) setSelectedChat(updatedChat);

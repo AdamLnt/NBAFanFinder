@@ -45,7 +45,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/ping").permitAll()
 
                 .requestMatchers("/api/users/**").authenticated()
-
+                .requestMatchers("/api/chat/**").authenticated()
+                .requestMatchers("/api/messages/**").authenticated()
                 .anyRequest().permitAll()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -35,10 +35,10 @@ public class MessageService {
                 .toList();
     }
 
-    public void sendMessage(SendMessageRequest request) {
+    public void sendMessage(SendMessageRequest request, String email) {
         Chat chat = chatRepository.findById(request.chatId())
                 .orElseThrow(() -> new NotFoundException("Chat non trouvé"));
-        User user = userRepository.findById(request.userId())
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
 
         messageRepository.save(new Message(request.texte(), chat, user));

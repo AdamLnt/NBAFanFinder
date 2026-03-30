@@ -1,3 +1,3 @@
 package com.NBAFanFinder.Backend.DTOs.Messages;
 
-public record SendMessageRequest(long chatId, long userId, String texte) {}
+public record SendMessageRequest(long chatId, String texte) {}

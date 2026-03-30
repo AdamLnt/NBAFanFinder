@@ -18,8 +18,8 @@ chatClient.interceptors.request.use(
 );
 
 export const chatApiService = {
-  async getChats(userId: number): Promise<Chat[]> {
-    const res = await chatClient.get<Chat[]>(`/chat?userId=${userId}`);
+  async getChats(): Promise<Chat[]> {
+    const res = await chatClient.get<Chat[]>("/chat");
     return res.data;
   },
 
@@ -49,9 +49,7 @@ export const chatApiService = {
     await chatClient.patch(`/chat/${chatId}`, data);
   },
 
-  async removeMember(chatId: number, memberId: number, requestUserId: number): Promise<void> {
-    await chatClient.delete(`/chat/${chatId}/members/${memberId}`, {
-      params: { requestUserId },
-    });
+  async removeMember(chatId: number, memberId: number): Promise<void> {
+    await chatClient.delete(`/chat/${chatId}/members/${memberId}`);
   },
 };

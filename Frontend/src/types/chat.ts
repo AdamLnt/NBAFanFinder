@@ -33,24 +33,20 @@ export interface User {
 export interface CreateChatRequest {
   nom: string;
   description: string;
-  userId: number;
   membresIds: number[];
   proprietairesIds?: number[];
 }
 
 export interface JoinChatRequest {
   chatId: number;
-  userId: number;
 }
 
 export interface SendMessageRequest {
   chatId: number;
-  userId: number;
   texte: string;
 }
 
 export interface UpdateChatRequest {
   nom?: string;
   description?: string;
-  requestUserId: number;
 }

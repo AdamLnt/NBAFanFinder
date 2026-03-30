@@ -28,20 +28,22 @@ public class ChatService {
         this.userRepository = userRepository;
     }
 
-    public List<AllChatsResponse> getAllChatsFromUser(long id) {
-        return chatRepository.getAllChatsForUser(id).stream()
+    public List<AllChatsResponse> getAllChatsFromUser(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
+        return chatRepository.getAllChatsForUser(user.getId()).stream()
                 .map(AllChatsResponse::from)
                 .toList();
     }
 
-    public void createChat(CreateChatRequest request) {
-        if (request.nom() == null || request.nom().isEmpty() 
+    public void createChat(CreateChatRequest request, String email) {
+        if (request.nom() == null || request.nom().isEmpty()
             || request.description() == null || request.description().isEmpty()) {
             throw new IllegalArgumentException("L'un des champs est incorrect");
         }
 
-        User proprietaire = userRepository.findById(request.userId())
-        .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
+        User proprietaire = userRepository.findByEmail(email)
+            .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
 
         Chat chat = new Chat(request.nom(), request.description());
         chatRepository.save(chat);
@@ -51,7 +53,7 @@ public class ChatService {
 
         if (request.proprietairesIds() != null) {
             for (Long propId : request.proprietairesIds()) {
-                if (propId == request.userId()) continue;
+                if (propId.equals(proprietaire.getId())) continue;
                 User coProprietaire = userRepository.findById(propId)
                     .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé: " + propId));
                 coProprietaire.getChatsPossedes().add(chat);
@@ -61,33 +63,35 @@ public class ChatService {
 
         if (request.membresIds() != null) {
             for (Long membreId : request.membresIds()) {
-                if (membreId == request.userId()) continue;
+                if (membreId.equals(proprietaire.getId())) continue;
                 User membre = userRepository.findById(membreId)
                     .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé: " + membreId));
                 membre.getChatsRejoints().add(chat);
                 userRepository.save(membre);
             }
         }
-
     }
 
-    public void joinChat(JoinChatRequest request) {
+    public void joinChat(JoinChatRequest request, String email) {
         Chat chat = chatRepository.findById(request.chatId())
             .orElseThrow(() -> new IllegalArgumentException("Chat non trouvé"));
 
-        User user = userRepository.findById(request.userId())
-            .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
 
         user.getChatsRejoints().add(chat);
         userRepository.save(user);
     }
 
-    public void updateChat(long chatId, UpdateChatRequest request) {
+    public void updateChat(long chatId, UpdateChatRequest request, String email) {
         Chat chat = chatRepository.findById(chatId)
             .orElseThrow(() -> new NotFoundException("Chat non trouvé"));
 
+        User requestUser = userRepository.findByEmail(email)
+            .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
+
         boolean isAdmin = chat.getProprietaires().stream()
-            .anyMatch(p -> p.getId() == request.requestUserId());
+            .anyMatch(p -> p.getId().equals(requestUser.getId()));
         if (!isAdmin) {
             throw new UnauthorizedException("Seul un administrateur peut modifier ce chat");
         }
@@ -102,12 +106,15 @@ public class ChatService {
         chatRepository.save(chat);
     }
 
-    public void removeMember(long chatId, long memberId, long requestUserId) {
+    public void removeMember(long chatId, long memberId, String email) {
         Chat chat = chatRepository.findById(chatId)
             .orElseThrow(() -> new NotFoundException("Chat non trouvé"));
 
+        User requestUser = userRepository.findByEmail(email)
+            .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
+
         boolean isAdmin = chat.getProprietaires().stream()
-            .anyMatch(p -> p.getId() == requestUserId);
+            .anyMatch(p -> p.getId().equals(requestUser.getId()));
         if (!isAdmin) {
             throw new UnauthorizedException("Seul un administrateur peut retirer des membres");
         }
