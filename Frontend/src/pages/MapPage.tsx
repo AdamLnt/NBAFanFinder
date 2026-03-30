@@ -8,7 +8,7 @@ export const MapPage = () => {
 
   return (
     <div className="map-page">
-      <Header onNavigateToLogin={() => navigate("/login")} />
+      <Header />
 
       <div className="map-body">
         <aside className="map-sidebar">

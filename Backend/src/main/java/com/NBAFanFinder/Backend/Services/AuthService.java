@@ -4,6 +4,8 @@ import com.NBAFanFinder.Backend.DTOs.AuthResponse;
 import com.NBAFanFinder.Backend.DTOs.LoginRequest;
 import com.NBAFanFinder.Backend.DTOs.RegisterRequest;
 import com.NBAFanFinder.Backend.Entities.User;
+import com.NBAFanFinder.Backend.Exceptions.NotFoundException;
+import com.NBAFanFinder.Backend.Exceptions.UnauthorizedException;
 import com.NBAFanFinder.Backend.Repositories.UserRepository;
 import com.NBAFanFinder.Backend.Security.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,51 +29,51 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        if (request.getEmail() == null || request.getPassword() == null) {
-            throw new RuntimeException("Email et mot de passe sont obligatoires");
+        if (request.email() == null || request.password() == null) {
+            throw new IllegalArgumentException("Email et mot de passe sont obligatoires");
         }
 
-        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+        Optional<User> userOptional = userRepository.findByEmail(request.email());
 
         if (userOptional.isEmpty()) {
-            throw new RuntimeException("Email ou mot de passe incorrect");
+            throw new UnauthorizedException("Email ou mot de passe incorrect");
         }
 
         User user = userOptional.get();
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Email ou mot de passe incorrect");
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new UnauthorizedException("Email ou mot de passe incorrect");
         }
 
         if (!user.getActif()) {
-            throw new RuntimeException("Compte désactivé");
+            throw new UnauthorizedException("Compte désactivé");
         }
 
         return generateAuthResponse(user);
     }
 
     public AuthResponse register(RegisterRequest request) {
-        if (request.getNom() == null || request.getPrenom() == null ||
-            request.getEmail() == null || request.getPassword() == null) {
-            throw new RuntimeException("Tous les champs sont obligatoires");
+        if (request.nom() == null || request.prenom() == null ||
+            request.email() == null || request.password() == null) {
+            throw new IllegalArgumentException("Tous les champs sont obligatoires");
         }
 
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Un utilisateur avec cet email existe déjà");
+        if (userRepository.existsByEmail(request.email())) {
+            throw new IllegalArgumentException("Un utilisateur avec cet email existe déjà");
         }
 
         User newUser = new User(
-            request.getNom(),
-            request.getPrenom(),
-            request.getEmail(),
-            request.getPassword()
+            request.nom(),
+            request.prenom(),
+            request.email(),
+            request.password()
         );
 
-        if (request.getDateNaissance() != null) {
-            newUser.setDateNaissance(request.getDateNaissance());
+        if (request.dateNaissance() != null) {
+            newUser.setDateNaissance(request.dateNaissance());
         }
 
-        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        newUser.setPassword(passwordEncoder.encode(request.password()));
 
         newUser.setActif(false);
 
@@ -87,11 +89,9 @@ public class AuthService {
     }
 
     public void activate(Long id) {
-        if (!userRepository.existsById(id)) { 
-            throw new RuntimeException("Utilisateur non trouvé : " + id); 
-        } 
-        User user = userRepository.findById(id).get(); 
-        user.setActif(true); 
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé : " + id));
+        user.setActif(true);
         userRepository.save(user);
     }
 

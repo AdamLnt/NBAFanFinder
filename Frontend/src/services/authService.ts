@@ -10,6 +10,7 @@ export const authService = {
       localStorage.setItem(TOKEN_KEY, authResponse.token);
     }
     localStorage.setItem(USER_KEY, JSON.stringify({
+      id: authResponse.id,
       email: authResponse.email,
       nom: authResponse.nom,
       prenom: authResponse.prenom,
@@ -22,7 +23,7 @@ export const authService = {
   },
 
   // Récupérer les informations utilisateur
-  getUser(): { email: string; nom: string; prenom: string } | null {
+  getUser(): { id: number; email: string; nom: string; prenom: string } | null {
     const userJson = localStorage.getItem(USER_KEY);
     if (!userJson) return null;
     try {

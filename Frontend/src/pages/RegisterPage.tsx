@@ -58,7 +58,7 @@ export const RegisterPage = () => {
 
   return (
     <>
-      <Header onNavigateToLogin={() => navigate("/login")} />
+      <Header />
 
       <main className="register-main">
         <Card>

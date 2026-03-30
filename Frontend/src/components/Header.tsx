@@ -6,11 +6,7 @@ import { MapIcon } from "./icons/MapIcon";
 import { ChatIcon } from "./icons/ChatIcon";
 import "../styles/Header.css";
 
-interface HeaderProps {
-  onNavigateToLogin?: () => void;
-}
-
-export const Header = ({ onNavigateToLogin }: HeaderProps) => {
+export const Header = () => {
   const navigate = useNavigate();
 
   return (
@@ -31,7 +27,7 @@ export const Header = ({ onNavigateToLogin }: HeaderProps) => {
         <img
           src={userPng}
           alt="Compte"
-          onClick={onNavigateToLogin}
+          onClick={() => navigate("/profile")}
           className="header__user-avatar"
         />
         <button
