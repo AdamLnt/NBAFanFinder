@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -6,20 +6,215 @@ on:
       - main
       - develop
       - feature/*
+    tags:
+      - 'v*.*.*'
+    paths-ignore:
+      - "**.md"
+      - docs/**
   pull_request:
     branches:
       - main
       - develop
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
-  build:
+  # ─── 1. Tests ────────────────────────────────────────────────────────────────
+
+  test-backend:
+    name: Tests Backend
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Affiche la version de Node
-        run: node --version
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
+          cache: maven
 
-      - name: Affiche la liste des fichiers
-        run: ls -la
+      - name: Run Maven tests
+        run: mvn test -B
+        working-directory: Backend
+
+  test-frontend:
+    name: Tests Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: Frontend
+
+      - name: Lint
+        run: npm run lint --if-present
+        working-directory: Frontend
+
+      - name: Tests
+        run: npm test --if-present
+        working-directory: Frontend
+
+  # ─── 2. Build Docker ─────────────────────────────────────────────────────────
+
+  build-docker:
+    name: Build Docker
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Backend
+          push: false
+          tags: nbafanfinder-backend:${{ github.sha }}
+          load: true
+
+      - name: Build frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Frontend
+          push: false
+          tags: nbafanfinder-frontend:${{ github.sha }}
+          load: true
+
+      - name: Save images as artifacts
+        run: |
+          docker save nbafanfinder-backend:${{ github.sha }} | gzip > backend.tar.gz
+          docker save nbafanfinder-frontend:${{ github.sha }} | gzip > frontend.tar.gz
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docker-images-${{ github.sha }}
+          path: |
+            backend.tar.gz
+            frontend.tar.gz
+          retention-days: 1
+
+  # ─── 3. Scan Trivy ───────────────────────────────────────────────────────────
+
+  scan-trivy:
+    name: Scan Trivy
+    needs: build-docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: docker-images-${{ github.sha }}
+
+      - name: Load images
+        run: |
+          docker load < backend.tar.gz
+          docker load < frontend.tar.gz
+
+      - name: Scan backend
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: nbafanfinder-backend:${{ github.sha }}
+          format: table
+          exit-code: '1'
+          severity: CRITICAL
+
+      - name: Scan frontend
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: nbafanfinder-frontend:${{ github.sha }}
+          format: table
+          exit-code: '1'
+          severity: CRITICAL
+
+  # ─── 4. Publication GHCR ────────────────────────────────────────────────────
+
+  publish:
+    name: Publish GHCR
+    needs: scan-trivy
+    if: |
+      github.ref == 'refs/heads/develop' ||
+      github.ref == 'refs/heads/main'    ||
+      startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: docker-images-${{ github.sha }}
+
+      - name: Load images
+        run: |
+          docker load < backend.tar.gz
+          docker load < frontend.tar.gz
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push backend
+        run: |
+          docker tag nbafanfinder-backend:${{ github.sha }} ghcr.io/adamlnt/nbafanfinder-backend:${{ github.sha }}
+          docker tag nbafanfinder-backend:${{ github.sha }} ghcr.io/adamlnt/nbafanfinder-backend:latest
+          docker push ghcr.io/adamlnt/nbafanfinder-backend:${{ github.sha }}
+          docker push ghcr.io/adamlnt/nbafanfinder-backend:latest
+
+      - name: Push frontend
+        run: |
+          docker tag nbafanfinder-frontend:${{ github.sha }} ghcr.io/adamlnt/nbafanfinder-frontend:${{ github.sha }}
+          docker tag nbafanfinder-frontend:${{ github.sha }} ghcr.io/adamlnt/nbafanfinder-frontend:latest
+          docker push ghcr.io/adamlnt/nbafanfinder-frontend:${{ github.sha }}
+          docker push ghcr.io/adamlnt/nbafanfinder-frontend:latest
+
+      - name: Tag version (release uniquement)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker tag nbafanfinder-backend:${{ github.sha }}  ghcr.io/adamlnt/nbafanfinder-backend:${{ github.ref_name }}
+          docker tag nbafanfinder-frontend:${{ github.sha }} ghcr.io/adamlnt/nbafanfinder-frontend:${{ github.ref_name }}
+          docker push ghcr.io/adamlnt/nbafanfinder-backend:${{ github.ref_name }}
+          docker push ghcr.io/adamlnt/nbafanfinder-frontend:${{ github.ref_name }}
+
+  # ─── 5. Deploy Staging ───────────────────────────────────────────────────────
+
+  deploy-staging:
+    name: Deploy Staging
+    needs: publish
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Deploy
+        run: |
+          echo "Deploiement ${{ github.sha }} → staging"
+          # ssh ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} \
+          #   "IMAGE_BACKEND=ghcr.io/adamlnt/nbafanfinder-backend:${{ github.sha }} \
+          #    IMAGE_FRONTEND=ghcr.io/adamlnt/nbafanfinder-frontend:${{ github.sha }} \
+          #    docker compose pull && docker compose up -d"
+
+  # ─── 6. Deploy Production ────────────────────────────────────────────────────
+
+  deploy-production:
+    name: Deploy Production
+    needs: publish
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy
+        run: |
+          echo "Deploiement ${{ github.ref_name }} → production"
+          # ssh ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} \
+          #   "IMAGE_BACKEND=ghcr.io/adamlnt/nbafanfinder-backend:${{ github.ref_name }} \
+          #    IMAGE_FRONTEND=ghcr.io/adamlnt/nbafanfinder-frontend:${{ github.ref_name }} \
+          #    docker compose pull && docker compose up -d"
