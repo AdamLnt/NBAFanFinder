@@ -24,5 +24,5 @@ public record AllMessagesResponse(
             message.getUtilisateur().getNom(),
             message.getUtilisateur().getPrenom());
     }
-    
+
 }

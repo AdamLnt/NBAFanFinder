@@ -20,7 +20,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    
+
     public List<AllUsersResponse> findAll() {
         List<User> users = userRepository.findAll();
         List<AllUsersResponse> response = users.stream().map(AllUsersResponse::from).toList();

@@ -1,0 +1,24 @@
+# Nom affiche dans l’onglet Actions de GitHub
+name: CI
+# Quand ce workflow s’execute
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    # Type de machine fournie par GitHub
+    runs-on: ubuntu-latest
+  steps:
+    # Recupere le code du depot dans le runner
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    # Lance une commande shell
+    - name: Affiche la version de Node
+      run: node --version
+    
+    - name: Affiche la liste des fichiers
+      run: ls -la

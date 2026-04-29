@@ -81,7 +81,7 @@ public class AuthService {
 
         return new AuthResponse(
             savedUser.getId(),
-            null, 
+            null,
             savedUser.getEmail(),
             savedUser.getNom(),
             savedUser.getPrenom()

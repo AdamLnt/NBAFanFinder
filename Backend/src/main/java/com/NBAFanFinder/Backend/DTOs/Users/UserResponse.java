@@ -6,12 +6,12 @@ import com.NBAFanFinder.Backend.Entities.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record UserResponse(
-    long id, 
-    String nom, 
-    String prenom, 
-    String email, 
-    @JsonProperty("date_naissance") LocalDate dateNaissance, 
-    String biographie, 
+    long id,
+    String nom,
+    String prenom,
+    String email,
+    @JsonProperty("date_naissance") LocalDate dateNaissance,
+    String biographie,
     @JsonProperty("date_inscription") LocalDate dateInscription,
     boolean actif
 ) {
@@ -27,5 +27,5 @@ public record UserResponse(
             user.getActif()
         );
     }
-    
+
 }
