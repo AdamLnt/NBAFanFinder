@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Claude
+.claude/
+
+# Node (root-level tooling: husky, commitlint, etc.)
+node_modules/
+package-lock.json
+
+# Secrets
+.env

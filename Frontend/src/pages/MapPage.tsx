@@ -1,10 +1,8 @@
 import { MapContainer, TileLayer } from "react-leaflet";
-import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
 import "../styles/MapPage.css";
 
 export const MapPage = () => {
-  const navigate = useNavigate();
 
   return (
     <div className="map-page">

@@ -1,0 +1,9 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace # Retire espaces fin de ligne
+      - id: end-of-file-fixer # Ajoute \n final
+      - id: check-yaml # Valide les YAML
+      - id: check-added-large-files # Bloque les fichiers > 500 KB
+      - id: detect-private-key # Detecte des cles privees
