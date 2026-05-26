@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { ChatSidebar } from "../components/chat/ChatSidebar";
@@ -13,6 +14,8 @@ import "../styles/ChatPage.css";
 export const ChatPage = () => {
   const user = authService.getUser();
   const userId = user?.id ?? 0;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const startWithParam = searchParams.get("startWith");
 
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
@@ -23,6 +26,7 @@ export const ChatPage = () => {
   const [loadingChats, setLoadingChats] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const selectedChatRef = useRef<Chat | null>(null);
+  const pendingStartRef = useRef<number | null>(null);
 
   useEffect(() => {
     selectedChatRef.current = selectedChat;
@@ -118,6 +122,23 @@ export const ChatPage = () => {
     const newChat = updated.find((c) => isDirectChatWith(c, targetUser.id));
     if (newChat) handleSelectChat(newChat);
   };
+
+  useEffect(() => {
+    if (!startWithParam) {
+      pendingStartRef.current = null;
+      return;
+    }
+    const targetId = Number(startWithParam);
+    if (!targetId || pendingStartRef.current === targetId) return;
+    if (users.length === 0 || loadingChats) return;
+    const targetUser = users.find((u) => u.id === targetId);
+    if (!targetUser) return;
+
+    pendingStartRef.current = targetId;
+    handleStartChat(targetUser);
+    searchParams.delete("startWith");
+    setSearchParams(searchParams, { replace: true });
+  }, [startWithParam, users, chats, loadingChats, searchParams, setSearchParams]);
 
   const handleJoinChat = async (chatId: number) => {
     await chatApiService.joinChat({ chatId });

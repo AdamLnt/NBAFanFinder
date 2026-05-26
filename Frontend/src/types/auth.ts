@@ -1,10 +1,22 @@
 // Request DTOs
+export interface AddressPayload {
+  numero: string;
+  rue: string;
+  ville: string;
+  code_postal: string;
+  pays: string;
+  latitude: number;
+  longitude: number;
+}
+
 export interface RegisterRequest {
   nom: string;
   prenom: string;
   email: string;
   password: string;
   dateNaissance?: string; // Format: YYYY-MM-DD
+  adresse: AddressPayload;
+  equipes_supportees_ids?: number[];
 }
 
 export interface LoginRequest {
