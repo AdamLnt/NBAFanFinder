@@ -48,7 +48,8 @@ export const ActivationPage = () => {
           {!activated ? (
             <div className="activation-pending">
               <p className="activation-pending__intro">
-                Merci pour votre inscription ! Cliquez sur le lien ci‑dessous pour activer votre compte.
+                Merci pour votre inscription ! Cliquez sur le lien ci‑dessous pour activer votre
+                compte.
               </p>
 
               <div className="activation-link-box">{activationLink}</div>

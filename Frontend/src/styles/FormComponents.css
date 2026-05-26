@@ -1,5 +1,5 @@
 .card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 16px;
   padding: 36px 40px 40px;
   width: 100%;
@@ -9,8 +9,8 @@
 
 .card__title {
   text-align: center;
-  color: #1B3A6B;
-  font-family: 'Outfit', sans-serif;
+  color: #1b3a6b;
+  font-family: "Outfit", sans-serif;
   font-weight: 700;
   font-size: 26px;
   font-style: italic;
@@ -19,10 +19,10 @@
 
 .form-label {
   display: block;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-weight: 600;
   font-size: 14px;
-  color: #1B3A6B;
+  color: #1b3a6b;
   margin-bottom: 6px;
 }
 
@@ -33,49 +33,49 @@
 .form-input {
   width: 100%;
   padding: 12px 14px;
-  border: 1.5px solid #D1D5DB;
+  border: 1.5px solid #d1d5db;
   border-radius: 8px;
   font-size: 15px;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   outline: none;
   box-sizing: border-box;
-  color: #1B3A6B;
+  color: #1b3a6b;
   transition: border-color 0.2s;
 }
 
 .form-input:focus {
-  border-color: #1B3A6B;
+  border-color: #1b3a6b;
 }
 
 .submit-btn {
   width: 100%;
   padding: 14px 0;
-  background: #1B3A6B;
-  color: #FFFFFF;
+  background: #1b3a6b;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   cursor: pointer;
   margin-top: 8px;
   transition: background 0.2s;
 }
 
 .submit-btn:hover {
-  background: #142D54;
+  background: #142d54;
 }
 
 .link-text {
   text-align: center;
   margin-top: 16px;
   font-size: 13px;
-  font-family: 'Outfit', sans-serif;
-  color: #6B7280;
+  font-family: "Outfit", sans-serif;
+  color: #6b7280;
 }
 
 .link-text__action {
-  color: #1B3A6B;
+  color: #1b3a6b;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;

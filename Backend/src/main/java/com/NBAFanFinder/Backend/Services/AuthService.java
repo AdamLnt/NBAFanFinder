@@ -1,5 +1,10 @@
 package com.NBAFanFinder.Backend.Services;
 
+import java.util.Optional;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.NBAFanFinder.Backend.DTOs.AuthResponse;
 import com.NBAFanFinder.Backend.DTOs.LoginRequest;
 import com.NBAFanFinder.Backend.DTOs.RegisterRequest;
@@ -8,10 +13,6 @@ import com.NBAFanFinder.Backend.Exceptions.NotFoundException;
 import com.NBAFanFinder.Backend.Exceptions.UnauthorizedException;
 import com.NBAFanFinder.Backend.Repositories.UserRepository;
 import com.NBAFanFinder.Backend.Security.JwtUtil;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthService {

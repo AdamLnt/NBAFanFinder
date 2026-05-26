@@ -1,7 +1,8 @@
 package com.NBAFanFinder.Backend.Entities;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "message")

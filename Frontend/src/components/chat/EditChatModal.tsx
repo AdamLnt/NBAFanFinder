@@ -20,8 +20,7 @@ export const EditChatModal = ({ chat, onClose, onUpdateChat, onRemoveMember }: P
     setDescription(chat.description ?? "");
   }, [chat.nom, chat.description]);
 
-  const infoChanged =
-    nom.trim() !== chat.nom || description.trim() !== (chat.description ?? "");
+  const infoChanged = nom.trim() !== chat.nom || description.trim() !== (chat.description ?? "");
 
   const handleSave = async () => {
     if (!nom.trim() || !infoChanged) return;
@@ -53,7 +52,9 @@ export const EditChatModal = ({ chat, onClose, onUpdateChat, onRemoveMember }: P
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal__header">
           <h3 className="modal__title">Paramètres du chat</h3>
-          <button className="modal__close" onClick={onClose}>✕</button>
+          <button className="modal__close" onClick={onClose}>
+            ✕
+          </button>
         </div>
 
         {error && <p className="modal__error">{error}</p>}
@@ -93,7 +94,9 @@ export const EditChatModal = ({ chat, onClose, onUpdateChat, onRemoveMember }: P
                   <div key={m.id} className="modal__member-item">
                     <div className="user-picker__avatar">{m.prenom.charAt(0).toUpperCase()}</div>
                     <div className="user-picker__info">
-                      <span className="user-picker__name">{m.prenom} {m.nom}</span>
+                      <span className="user-picker__name">
+                        {m.prenom} {m.nom}
+                      </span>
                     </div>
                     <button
                       className="member-remove-btn"

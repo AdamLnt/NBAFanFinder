@@ -7,10 +7,7 @@ interface NavLinkProps {
 }
 
 export const NavLink = ({ label, onClick, active }: NavLinkProps) => (
-  <button
-    onClick={onClick}
-    className={active ? "nav-link nav-link--active" : "nav-link"}
-  >
+  <button onClick={onClick} className={active ? "nav-link nav-link--active" : "nav-link"}>
     {label}
   </button>
 );

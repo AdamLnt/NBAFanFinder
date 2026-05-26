@@ -27,6 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
@@ -34,15 +36,24 @@ jobs:
           distribution: temurin
           cache: maven
 
-      - name: Run Maven tests
-        run: mvn test -B
+      - name: Run Maven tests + JaCoCo
+        run: mvn -B verify
         working-directory: Backend
+
+      - name: Upload backend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: Backend/target/site/jacoco/
+          retention-days: 1
 
   test-frontend:
     name: Tests Frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -55,12 +66,65 @@ jobs:
         working-directory: Frontend
 
       - name: Lint
-        run: npm run lint --if-present
+        run: npm run lint
         working-directory: Frontend
 
-      - name: Tests
-        run: npm test --if-present
+      - name: Format check
+        run: npm run format:check
         working-directory: Frontend
+
+      - name: Tests + couverture
+        run: npm run test:coverage
+        working-directory: Frontend
+
+      - name: Upload frontend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: Frontend/coverage/
+          retention-days: 1
+
+  # Scan SonarQube — nécessite les secrets SONAR_HOST_URL et SONAR_TOKEN
+  # (instance SonarQube auto-hébergée, accessible depuis GitHub Actions)
+  sonar:
+    name: SonarQube scan
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.head.repo.fork }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
+          cache: maven
+
+      - name: Backend tests + couverture
+        run: mvn -B verify
+        working-directory: Backend
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Frontend tests + couverture
+        run: |
+          npm ci
+          npm run test:coverage
+        working-directory: Frontend
+
+      - name: SonarQube scan
+        if: ${{ env.SONAR_TOKEN != '' && env.SONAR_HOST_URL != '' }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: SonarSource/sonarqube-scan-action@v4
 
   # Build Docker
 

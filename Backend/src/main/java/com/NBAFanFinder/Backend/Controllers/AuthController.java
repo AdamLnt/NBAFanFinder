@@ -1,12 +1,13 @@
 package com.NBAFanFinder.Backend.Controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.NBAFanFinder.Backend.DTOs.AuthResponse;
 import com.NBAFanFinder.Backend.DTOs.LoginRequest;
 import com.NBAFanFinder.Backend.DTOs.RegisterRequest;
 import com.NBAFanFinder.Backend.Services.AuthService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")

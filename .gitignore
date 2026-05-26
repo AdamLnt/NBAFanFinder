@@ -21,3 +21,6 @@ package-lock.json
 
 # Secrets
 .env
+
+# Sonar scanner work directory
+.scannerwork/

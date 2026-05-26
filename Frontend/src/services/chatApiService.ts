@@ -1,7 +1,15 @@
 import axios from "axios";
 import type { AxiosInstance } from "axios";
 import { authService } from "./authService";
-import type { Chat, Message, User, CreateChatRequest, JoinChatRequest, SendMessageRequest, UpdateChatRequest } from "../types/chat";
+import type {
+  Chat,
+  Message,
+  User,
+  CreateChatRequest,
+  JoinChatRequest,
+  SendMessageRequest,
+  UpdateChatRequest,
+} from "../types/chat";
 
 const chatClient: AxiosInstance = axios.create({
   baseURL: "http://localhost:8080/api",

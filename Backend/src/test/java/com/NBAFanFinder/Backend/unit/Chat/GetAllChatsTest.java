@@ -1,12 +1,12 @@
 package com.NBAFanFinder.Backend.unit.Chat;
 
-import com.NBAFanFinder.Backend.DTOs.Chats.AllChatsResponse;
-import com.NBAFanFinder.Backend.Entities.Chat;
-import com.NBAFanFinder.Backend.Entities.User;
-import com.NBAFanFinder.Backend.Exceptions.NotFoundException;
-import com.NBAFanFinder.Backend.Repositories.ChatRepository;
-import com.NBAFanFinder.Backend.Repositories.UserRepository;
-import com.NBAFanFinder.Backend.Services.ChatService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,12 +15,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
+import com.NBAFanFinder.Backend.DTOs.Chats.AllChatsResponse;
+import com.NBAFanFinder.Backend.Entities.Chat;
+import com.NBAFanFinder.Backend.Entities.User;
+import com.NBAFanFinder.Backend.Exceptions.NotFoundException;
+import com.NBAFanFinder.Backend.Repositories.ChatRepository;
+import com.NBAFanFinder.Backend.Repositories.UserRepository;
+import com.NBAFanFinder.Backend.Services.ChatService;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests unitaires - ChatService#getAllChatsFromUser")

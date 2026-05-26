@@ -1,14 +1,15 @@
 package com.NBAFanFinder.Backend.Services;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.NBAFanFinder.Backend.DTOs.Users.AllUsersResponse;
 import com.NBAFanFinder.Backend.DTOs.Users.UserResponse;
 import com.NBAFanFinder.Backend.Entities.User;
 import com.NBAFanFinder.Backend.Exceptions.NotFoundException;
 import com.NBAFanFinder.Backend.Repositories.UserRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional

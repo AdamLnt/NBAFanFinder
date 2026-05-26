@@ -13,7 +13,9 @@ export const ProfilePage = () => {
         <div className="profile-card">
           <img src={userPng} alt="Avatar" className="profile-avatar" />
           {user && (
-            <p className="profile-name">{user.prenom} {user.nom}</p>
+            <p className="profile-name">
+              {user.prenom} {user.nom}
+            </p>
           )}
           <div className="profile-info">
             <div className="profile-info-row">

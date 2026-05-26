@@ -1,5 +1,5 @@
 .footer {
-  background: #1B3A6B;
+  background: #1b3a6b;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -8,9 +8,9 @@
 }
 
 .footer__copyright {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 13px;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -22,10 +22,10 @@
 .footer__contact-btn {
   background: none;
   border: 1.5px solid white;
-  color: #FFFFFF;
+  color: #ffffff;
   border-radius: 20px;
   padding: 4px 18px;
   font-size: 13px;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   cursor: pointer;
 }

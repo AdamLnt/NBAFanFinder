@@ -1,12 +1,11 @@
 package com.NBAFanFinder.Backend.unit;
 
-import com.NBAFanFinder.Backend.DTOs.AuthResponse;
-import com.NBAFanFinder.Backend.DTOs.LoginRequest;
-import com.NBAFanFinder.Backend.Entities.User;
-import com.NBAFanFinder.Backend.Exceptions.UnauthorizedException;
-import com.NBAFanFinder.Backend.Repositories.UserRepository;
-import com.NBAFanFinder.Backend.Security.JwtUtil;
-import com.NBAFanFinder.Backend.Services.AuthService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,11 +15,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
+import com.NBAFanFinder.Backend.DTOs.AuthResponse;
+import com.NBAFanFinder.Backend.DTOs.LoginRequest;
+import com.NBAFanFinder.Backend.Entities.User;
+import com.NBAFanFinder.Backend.Exceptions.UnauthorizedException;
+import com.NBAFanFinder.Backend.Repositories.UserRepository;
+import com.NBAFanFinder.Backend.Security.JwtUtil;
+import com.NBAFanFinder.Backend.Services.AuthService;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
