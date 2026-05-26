@@ -1,9 +1,9 @@
 package com.NBAFanFinder.Backend.Services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import com.NBAFanFinder.Backend.DTOs.Chats.AllChatsResponse;
 import com.NBAFanFinder.Backend.DTOs.Chats.CreateChatRequest;

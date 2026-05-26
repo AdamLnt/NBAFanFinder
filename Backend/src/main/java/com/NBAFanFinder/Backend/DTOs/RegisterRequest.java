@@ -1,6 +1,7 @@
 package com.NBAFanFinder.Backend.DTOs;
 
 import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record RegisterRequest(

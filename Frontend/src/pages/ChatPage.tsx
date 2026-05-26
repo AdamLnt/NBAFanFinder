@@ -69,9 +69,7 @@ export const ChatPage = () => {
   useEffect(() => {
     if (userId) {
       loadChats();
-      chatApiService.getUsers().then((all) =>
-        setUsers(all.filter((u) => u.id !== userId))
-      );
+      chatApiService.getUsers().then((all) => setUsers(all.filter((u) => u.id !== userId)));
     }
   }, [userId]);
 

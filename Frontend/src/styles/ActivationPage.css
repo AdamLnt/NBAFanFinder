@@ -1,30 +1,30 @@
 .activation-pending {
   text-align: center;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
 }
 
 .activation-pending__intro {
-  color: #4B5563;
+  color: #4b5563;
   font-size: 15px;
   line-height: 1.6;
   margin-bottom: 20px;
 }
 
 .activation-link-box {
-  background: #F3F4F6;
+  background: #f3f4f6;
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 20px;
   font-size: 13px;
-  color: #6B7280;
+  color: #6b7280;
   word-break: break-all;
   font-family: monospace;
 }
 
 .activation-btn {
   display: inline-block;
-  color: #FFFFFF;
-  background: #1B3A6B;
+  color: #ffffff;
+  background: #1b3a6b;
   font-weight: 600;
   font-size: 16px;
   padding: 12px 32px;
@@ -36,7 +36,7 @@
 }
 
 .activation-btn:hover {
-  background: #142D54;
+  background: #142d54;
 }
 
 .activation-btn--loading {
@@ -45,19 +45,19 @@
 }
 
 .activation-btn--loading:hover {
-  background: #1B3A6B;
+  background: #1b3a6b;
 }
 
 .activation-success {
   text-align: center;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
 }
 
 .activation-success__badge {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: #D1FAE5;
+  background: #d1fae5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,14 +66,14 @@
 }
 
 .activation-success__title {
-  color: #065F46;
+  color: #065f46;
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 8px;
 }
 
 .activation-success__subtitle {
-  color: #6B7280;
+  color: #6b7280;
   font-size: 14px;
   margin-bottom: 24px;
 }

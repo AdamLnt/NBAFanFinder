@@ -43,9 +43,15 @@ export const HomePage = () => {
             <p className="home-connected-msg">Vous êtes connecté !</p>
 
             <div className="home-user-info">
-              <p><strong>Nom :</strong> {user.nom}</p>
-              <p><strong>Prénom :</strong> {user.prenom}</p>
-              <p><strong>Email :</strong> {user.email}</p>
+              <p>
+                <strong>Nom :</strong> {user.nom}
+              </p>
+              <p>
+                <strong>Prénom :</strong> {user.prenom}
+              </p>
+              <p>
+                <strong>Email :</strong> {user.email}
+              </p>
             </div>
           </div>
 

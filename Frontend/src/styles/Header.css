@@ -1,5 +1,5 @@
 .header {
-  background: #1B3A6B;
+  background: #1b3a6b;
   padding: 14px 32px;
   display: flex;
   align-items: center;
@@ -43,7 +43,7 @@
   color: white;
   cursor: pointer;
   padding: 6px 14px;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 14px;
   font-weight: 600;
 }

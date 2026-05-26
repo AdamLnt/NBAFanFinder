@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.git
+*.md
+.env*
+
+# Tests (pas nécessaires pour le build de prod)
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+src/test/
+vitest.config.ts

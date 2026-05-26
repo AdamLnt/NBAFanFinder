@@ -1,9 +1,10 @@
 package com.NBAFanFinder.Backend.Entities;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "evenement")

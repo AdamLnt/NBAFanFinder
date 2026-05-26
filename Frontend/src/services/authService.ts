@@ -9,12 +9,15 @@ export const authService = {
     if (authResponse.token) {
       localStorage.setItem(TOKEN_KEY, authResponse.token);
     }
-    localStorage.setItem(USER_KEY, JSON.stringify({
-      id: authResponse.id,
-      email: authResponse.email,
-      nom: authResponse.nom,
-      prenom: authResponse.prenom,
-    }));
+    localStorage.setItem(
+      USER_KEY,
+      JSON.stringify({
+        id: authResponse.id,
+        email: authResponse.email,
+        nom: authResponse.nom,
+        prenom: authResponse.prenom,
+      })
+    );
   },
 
   // Récupérer le token

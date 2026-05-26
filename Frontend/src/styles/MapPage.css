@@ -12,8 +12,8 @@
 
 .map-sidebar {
   width: 280px;
-  background: #FFFFFF;
-  border-right: 1px solid #D1D5DB;
+  background: #ffffff;
+  border-right: 1px solid #d1d5db;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -22,23 +22,23 @@
 
 .map-sidebar__search-wrapper {
   padding: 14px 16px;
-  border-bottom: 1px solid #D1D5DB;
+  border-bottom: 1px solid #d1d5db;
 }
 
 .map-search-input {
   width: 100%;
   padding: 10px 12px;
-  border: 1.5px solid #D1D5DB;
+  border: 1.5px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   outline: none;
   box-sizing: border-box;
-  color: #1B3A6B;
+  color: #1b3a6b;
 }
 
 .map-search-input:focus {
-  border-color: #1B3A6B;
+  border-color: #1b3a6b;
 }
 
 .map-container {

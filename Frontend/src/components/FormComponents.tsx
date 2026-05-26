@@ -5,25 +5,19 @@ interface CardProps {
   children: ReactNode;
 }
 
-export const Card = ({ children }: CardProps) => (
-  <div className="card">{children}</div>
-);
+export const Card = ({ children }: CardProps) => <div className="card">{children}</div>;
 
 interface TitleProps {
   children: ReactNode;
 }
 
-export const Title = ({ children }: TitleProps) => (
-  <h2 className="card__title">{children}</h2>
-);
+export const Title = ({ children }: TitleProps) => <h2 className="card__title">{children}</h2>;
 
 interface LabelProps {
   children: ReactNode;
 }
 
-export const Label = ({ children }: LabelProps) => (
-  <label className="form-label">{children}</label>
-);
+export const Label = ({ children }: LabelProps) => <label className="form-label">{children}</label>;
 
 interface FieldProps {
   label: string;

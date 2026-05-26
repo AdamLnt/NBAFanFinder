@@ -77,7 +77,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .chat-sidebar__compose-btn:hover {
@@ -221,7 +223,10 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    opacity 0.2s;
   text-align: center;
 }
 
@@ -305,7 +310,9 @@
   font-weight: 600;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .chat-window__members-btn:hover {
@@ -520,7 +527,9 @@
   font-family: "Outfit", sans-serif;
   outline: none;
   background: #eaeef3;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .chat-window__input:focus {
@@ -540,7 +549,9 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .chat-window__send-btn:hover:not(:disabled) {
@@ -620,7 +631,9 @@
   font-weight: 600;
   color: #9ca3af;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
 }
 
 .modal__tab--active {
@@ -680,7 +693,9 @@
   font-family: "Outfit", sans-serif;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .modal__btn:hover:not(:disabled) {
@@ -705,7 +720,9 @@
   color: #1b3a6b;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .chat-window__settings-btn:hover {

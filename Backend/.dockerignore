@@ -1,0 +1,7 @@
+target/
+.git
+*.md
+.mvn/wrapper/maven-wrapper.jar
+
+# Tests (le build dans le Dockerfile utilise -DskipTests, mais inutile dans le contexte)
+src/test/

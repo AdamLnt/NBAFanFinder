@@ -22,9 +22,7 @@ export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinCh
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    chatApiService.getUsers().then((all) =>
-      setUsers(all.filter((u) => u.id !== currentUserId))
-    );
+    chatApiService.getUsers().then((all) => setUsers(all.filter((u) => u.id !== currentUserId)));
   }, [currentUserId]);
 
   const filtered = users.filter((u) => {
@@ -78,19 +76,27 @@ export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinCh
           <h3 className="modal__title">
             {tab === "create" ? "Créer un chat" : "Rejoindre un chat"}
           </h3>
-          <button className="modal__close" onClick={onClose}>✕</button>
+          <button className="modal__close" onClick={onClose}>
+            ✕
+          </button>
         </div>
 
         <div className="modal__tabs">
           <button
             className={`modal__tab${tab === "create" ? " modal__tab--active" : ""}`}
-            onClick={() => { setTab("create"); setError(""); }}
+            onClick={() => {
+              setTab("create");
+              setError("");
+            }}
           >
             Créer
           </button>
           <button
             className={`modal__tab${tab === "join" ? " modal__tab--active" : ""}`}
-            onClick={() => { setTab("join"); setError(""); }}
+            onClick={() => {
+              setTab("join");
+              setError("");
+            }}
           >
             Rejoindre
           </button>
@@ -125,7 +131,10 @@ export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinCh
               <label className="modal__label">
                 Inviter des membres
                 {selectedIds.size > 0 && (
-                  <span className="modal__label-count"> · {selectedIds.size} sélectionné{selectedIds.size > 1 ? "s" : ""}</span>
+                  <span className="modal__label-count">
+                    {" "}
+                    · {selectedIds.size} sélectionné{selectedIds.size > 1 ? "s" : ""}
+                  </span>
                 )}
               </label>
               <input
@@ -152,11 +161,20 @@ export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinCh
                           {u.prenom.charAt(0).toUpperCase()}
                         </div>
                         <div className="user-picker__info">
-                          <span className="user-picker__name">{u.prenom} {u.nom}</span>
+                          <span className="user-picker__name">
+                            {u.prenom} {u.nom}
+                          </span>
                           <span className="user-picker__email">{u.email}</span>
                         </div>
                         {selected && (
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                          >
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
                         )}
@@ -167,11 +185,7 @@ export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinCh
               </div>
             </div>
 
-            <button
-              className="modal__btn"
-              onClick={handleCreate}
-              disabled={!nom.trim() || loading}
-            >
+            <button className="modal__btn" onClick={handleCreate} disabled={!nom.trim() || loading}>
               {loading ? "Création..." : "Créer le chat"}
             </button>
           </div>
@@ -187,11 +201,7 @@ export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinCh
                 onChange={(e) => setChatId(e.target.value)}
               />
             </div>
-            <button
-              className="modal__btn"
-              onClick={handleJoin}
-              disabled={!chatId || loading}
-            >
+            <button className="modal__btn" onClick={handleJoin} disabled={!chatId || loading}>
               {loading ? "Connexion..." : "Rejoindre le chat"}
             </button>
           </div>

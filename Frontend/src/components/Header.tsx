@@ -31,7 +31,10 @@ export const Header = () => {
           className="header__user-avatar"
         />
         <button
-          onClick={() => { authService.logout(); navigate("/login"); }}
+          onClick={() => {
+            authService.logout();
+            navigate("/login");
+          }}
           className="header__logout-btn"
         >
           Déconnexion

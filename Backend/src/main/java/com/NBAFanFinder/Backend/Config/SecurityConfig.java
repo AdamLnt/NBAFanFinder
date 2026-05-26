@@ -1,6 +1,7 @@
 package com.NBAFanFinder.Backend.Config;
 
-import com.NBAFanFinder.Backend.Security.JwtFilter;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +14,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import java.util.List;
+
+import com.NBAFanFinder.Backend.Security.JwtFilter;
 
 @Configuration
 @EnableWebSecurity

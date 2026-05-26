@@ -1,20 +1,20 @@
 package com.NBAFanFinder.Backend.Controllers;
 
-import com.NBAFanFinder.Backend.DTOs.Users.AllUsersResponse;
-import com.NBAFanFinder.Backend.DTOs.Users.UserResponse;
-import com.NBAFanFinder.Backend.Services.UserService;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.NBAFanFinder.Backend.DTOs.Users.AllUsersResponse;
+import com.NBAFanFinder.Backend.DTOs.Users.UserResponse;
+import com.NBAFanFinder.Backend.Services.UserService;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
-    
+
     public UserController(UserService userService) {
         this.userService = userService;
     }

@@ -4,11 +4,11 @@
   flex-direction: column;
   align-items: center;
   padding: 48px 16px;
-  background: #EAEEF3;
+  background: #eaeef3;
 }
 
 .profile-card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 16px;
   padding: 40px 48px;
   width: 100%;
@@ -24,14 +24,14 @@
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  border: 3px solid #1B3A6B;
+  border: 3px solid #1b3a6b;
   object-fit: cover;
 }
 
 .profile-name {
   font-size: 22px;
   font-weight: 700;
-  color: #1B3A6B;
+  color: #1b3a6b;
   margin: 0;
 }
 
@@ -47,14 +47,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: #EAEEF3;
+  background: #eaeef3;
   border-radius: 8px;
 }
 
 .profile-info-label {
   font-size: 13px;
   font-weight: 600;
-  color: #9CA3AF;
+  color: #9ca3af;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -62,5 +62,5 @@
 .profile-info-value {
   font-size: 15px;
   font-weight: 500;
-  color: #1B3A6B;
+  color: #1b3a6b;
 }

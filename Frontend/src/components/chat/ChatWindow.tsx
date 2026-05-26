@@ -28,13 +28,24 @@ function MemberItem({ member, isOwner }: { member: ChatMember; isOwner: boolean 
   return (
     <div className="members-panel__item">
       <div className="members-panel__avatar">{member.prenom.charAt(0).toUpperCase()}</div>
-      <span className="members-panel__name">{member.prenom} {member.nom}</span>
+      <span className="members-panel__name">
+        {member.prenom} {member.nom}
+      </span>
       {isOwner && <span className="members-panel__badge">Admin</span>}
     </div>
   );
 }
 
-export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loading, users, onStartChat, onOpenSettings }: Props) => {
+export const ChatWindow = ({
+  chat,
+  messages,
+  currentUserId,
+  onSendMessage,
+  loading,
+  users,
+  onStartChat,
+  onOpenSettings,
+}: Props) => {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
@@ -82,7 +93,9 @@ export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loadi
         <div className="users-grid">
           <div className="users-grid__header">
             <h2 className="users-grid__title">Démarrer une conversation</h2>
-            <p className="users-grid__subtitle">Cliquez sur un utilisateur pour créer un chat direct</p>
+            <p className="users-grid__subtitle">
+              Cliquez sur un utilisateur pour créer un chat direct
+            </p>
           </div>
           {users.length === 0 ? (
             <p className="users-grid__empty">Aucun autre utilisateur disponible</p>
@@ -96,7 +109,9 @@ export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loadi
                   disabled={startingChat === u.id}
                 >
                   <div className="user-card__avatar">{u.prenom.charAt(0).toUpperCase()}</div>
-                  <span className="user-card__name">{u.prenom} {u.nom}</span>
+                  <span className="user-card__name">
+                    {u.prenom} {u.nom}
+                  </span>
                   <span className="user-card__email">{u.email}</span>
                 </button>
               ))}
@@ -123,7 +138,14 @@ export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loadi
             onClick={onOpenSettings}
             title="Paramètres du chat"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
             </svg>
@@ -134,7 +156,14 @@ export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loadi
           onClick={() => setShowMembers((v) => !v)}
           title="Voir les membres"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
             <circle cx="9" cy="7" r="4" />
             <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -194,9 +223,7 @@ export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loadi
               </div>
             )}
 
-            {totalMembers === 0 && (
-              <p className="members-panel__empty">Aucun membre</p>
-            )}
+            {totalMembers === 0 && <p className="members-panel__empty">Aucun membre</p>}
           </aside>
         )}
       </div>
@@ -217,7 +244,14 @@ export const ChatWindow = ({ chat, messages, currentUserId, onSendMessage, loadi
           disabled={!text.trim() || sending}
           title="Envoyer"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <line x1="22" y1="2" x2="11" y2="13" />
             <polygon points="22 2 15 22 11 13 2 9 22 2" />
           </svg>

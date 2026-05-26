@@ -1,0 +1,40 @@
+repos:
+  # Hygiène basique
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace # Retire espaces fin de ligne
+      - id: end-of-file-fixer # Ajoute \n final
+      - id: check-yaml # Valide les YAML
+      - id: check-added-large-files # Bloque les fichiers > 500 KB
+      - id: detect-private-key # Detecte des cles privees
+
+  # Détection de secrets dans le code et l'historique
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks
+
+  # Lint + format Frontend / Backend (via npm + Maven)
+  - repo: local
+    hooks:
+      - id: frontend-lint
+        name: Frontend ESLint
+        language: system
+        entry: bash -c 'cd Frontend && npm run lint'
+        files: ^Frontend/.*\.(ts|tsx|js|jsx)$
+        pass_filenames: false
+
+      - id: frontend-format
+        name: Frontend Prettier
+        language: system
+        entry: bash -c 'cd Frontend && npm run format:check'
+        files: ^Frontend/.*\.(ts|tsx|css|json)$
+        pass_filenames: false
+
+      - id: backend-format
+        name: Backend Spotless check
+        language: system
+        entry: bash -c 'cd Backend && ./mvnw spotless:check -q'
+        files: ^Backend/.*\.java$
+        pass_filenames: false
