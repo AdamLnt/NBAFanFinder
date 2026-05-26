@@ -16,10 +16,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.NBAFanFinder.Backend.DTOs.AddressRequest;
 import com.NBAFanFinder.Backend.DTOs.AuthResponse;
 import com.NBAFanFinder.Backend.DTOs.RegisterRequest;
 import com.NBAFanFinder.Backend.Entities.User;
 import com.NBAFanFinder.Backend.Exceptions.NotFoundException;
+import com.NBAFanFinder.Backend.Repositories.AddressRepository;
+import com.NBAFanFinder.Backend.Repositories.TeamRepository;
 import com.NBAFanFinder.Backend.Repositories.UserRepository;
 import com.NBAFanFinder.Backend.Security.JwtUtil;
 import com.NBAFanFinder.Backend.Services.AuthService;
@@ -32,6 +35,12 @@ public class AuthServiceRegisterTest {
     private UserRepository userRepository;
 
     @Mock
+    private AddressRepository addressRepository;
+
+    @Mock
+    private TeamRepository teamRepository;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Mock
@@ -40,10 +49,16 @@ public class AuthServiceRegisterTest {
     @InjectMocks
     private AuthService authService;
 
+    private static final AddressRequest VALID_ADDRESS = new AddressRequest(
+        "10", "Rue de Rivoli", "Paris", "75001", "France", 48.8566, 2.3522
+    );
+
     @Test
     @DisplayName("Inscrit un utilisateur avec succès et hash le mot de passe")
     void shouldRegisterUserSuccessfully() {
-        RegisterRequest request = new RegisterRequest("Dupont", "Jean", "jean@email.com", "plainPwd", null);
+        RegisterRequest request = new RegisterRequest(
+            "Dupont", "Jean", "jean@email.com", "plainPwd", null, VALID_ADDRESS, null
+        );
         when(userRepository.existsByEmail("jean@email.com")).thenReturn(false);
         when(passwordEncoder.encode("plainPwd")).thenReturn("hashed");
         when(userRepository.save(any(User.class))).thenAnswer(inv -> {
@@ -63,7 +78,9 @@ public class AuthServiceRegisterTest {
     @Test
     @DisplayName("Refuse l'inscription si l'email est déjà utilisé")
     void shouldRejectRegisterWhenEmailAlreadyExists() {
-        RegisterRequest request = new RegisterRequest("Dupont", "Jean", "jean@email.com", "plainPwd", null);
+        RegisterRequest request = new RegisterRequest(
+            "Dupont", "Jean", "jean@email.com", "plainPwd", null, VALID_ADDRESS, null
+        );
         when(userRepository.existsByEmail("jean@email.com")).thenReturn(true);
 
         assertThatThrownBy(() -> authService.register(request))
@@ -74,11 +91,25 @@ public class AuthServiceRegisterTest {
     @Test
     @DisplayName("Refuse l'inscription si un champ obligatoire est manquant")
     void shouldRejectRegisterWhenFieldMissing() {
-        RegisterRequest request = new RegisterRequest(null, "Jean", "jean@email.com", "plainPwd", null);
+        RegisterRequest request = new RegisterRequest(
+            null, "Jean", "jean@email.com", "plainPwd", null, VALID_ADDRESS, null
+        );
 
         assertThatThrownBy(() -> authService.register(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("obligatoires");
+    }
+
+    @Test
+    @DisplayName("Refuse l'inscription si l'adresse est manquante")
+    void shouldRejectRegisterWhenAddressMissing() {
+        RegisterRequest request = new RegisterRequest(
+            "Dupont", "Jean", "jean@email.com", "plainPwd", null, null, null
+        );
+
+        assertThatThrownBy(() -> authService.register(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("adresse");
     }
 
     @Test

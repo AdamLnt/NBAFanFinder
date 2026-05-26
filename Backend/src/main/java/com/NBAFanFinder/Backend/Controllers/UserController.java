@@ -3,9 +3,16 @@ package com.NBAFanFinder.Backend.Controllers;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.NBAFanFinder.Backend.DTOs.Users.AllUsersResponse;
+import com.NBAFanFinder.Backend.DTOs.Users.MapUserResponse;
+import com.NBAFanFinder.Backend.DTOs.Users.UserLocationResponse;
 import com.NBAFanFinder.Backend.DTOs.Users.UserResponse;
 import com.NBAFanFinder.Backend.Services.UserService;
 
@@ -27,6 +34,19 @@ public class UserController {
     @GetMapping("/ping")
     public ResponseEntity<String> ping() {
         return ResponseEntity.ok("Pong!");
+    }
+
+    @GetMapping("/map")
+    public ResponseEntity<List<MapUserResponse>> getUsersForMap(
+        @RequestParam(value = "teamId", required = false) Long teamId
+    ) {
+        return ResponseEntity.ok(userService.findForMap(teamId));
+    }
+
+    @GetMapping("/me/location")
+    public ResponseEntity<UserLocationResponse> getMyLocation() {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(userService.findMyLocation(email));
     }
 
     @GetMapping("/{id}")

@@ -20,9 +20,18 @@
   flex-shrink: 0;
 }
 
-.map-sidebar__search-wrapper {
+.map-sidebar__section {
   padding: 14px 16px;
   border-bottom: 1px solid #d1d5db;
+}
+
+.map-sidebar__label {
+  display: block;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: #1b3a6b;
+  margin-bottom: 6px;
 }
 
 .map-search-input {
@@ -35,13 +44,116 @@
   outline: none;
   box-sizing: border-box;
   color: #1b3a6b;
+  background: #ffffff;
 }
 
 .map-search-input:focus {
   border-color: #1b3a6b;
 }
 
+.map-locate-btn {
+  width: 100%;
+  padding: 10px 12px;
+  background: #1b3a6b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.map-locate-btn:hover {
+  background: #142d54;
+}
+
+.map-sidebar__count {
+  margin: 0;
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.map-sidebar__error {
+  margin: 8px 0 0 0;
+  font-family: "Outfit", sans-serif;
+  font-size: 12px;
+  color: #991b1b;
+}
+
+.map-sidebar__hint {
+  margin: 8px 0 0 0;
+  font-family: "Outfit", sans-serif;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.radius-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.radius-chip {
+  padding: 6px 12px;
+  background: #ffffff;
+  color: #1b3a6b;
+  border: 1.5px solid #d1d5db;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: "Outfit", sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.radius-chip:hover:not(:disabled) {
+  border-color: #1b3a6b;
+}
+
+.radius-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.radius-chip--selected {
+  background: #1b3a6b;
+  color: #ffffff;
+  border-color: #1b3a6b;
+  font-weight: 600;
+}
+
 .map-container {
   flex: 1;
   height: 100%;
+}
+
+.map-popup {
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  color: #1b3a6b;
+  min-width: 160px;
+}
+
+.map-popup__chat-btn {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #1b3a6b;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.map-popup__chat-btn:hover {
+  background: #142d54;
 }

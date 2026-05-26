@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.NBAFanFinder.Backend.DTOs.AddressRequest;
 import com.NBAFanFinder.Backend.DTOs.LoginRequest;
 import com.NBAFanFinder.Backend.DTOs.RegisterRequest;
 import com.NBAFanFinder.Backend.Entities.User;
@@ -51,7 +52,12 @@ public class AuthControllerIntegrationTest {
     @Test
     @DisplayName("POST /api/auth/register crée un utilisateur et renvoie 201")
     void shouldRegisterUserViaController() throws Exception {
-        RegisterRequest req = new RegisterRequest("Test", "User", "test.user@email.com", "Pwd123!", null);
+        AddressRequest addr = new AddressRequest(
+            "10", "Rue de Rivoli", "Paris", "75001", "France", 48.8566, 2.3522
+        );
+        RegisterRequest req = new RegisterRequest(
+            "Test", "User", "test.user@email.com", "Pwd123!", null, addr, null
+        );
 
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)

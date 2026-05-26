@@ -19,6 +19,8 @@ import com.NBAFanFinder.Backend.DTOs.AuthResponse;
 import com.NBAFanFinder.Backend.DTOs.LoginRequest;
 import com.NBAFanFinder.Backend.Entities.User;
 import com.NBAFanFinder.Backend.Exceptions.UnauthorizedException;
+import com.NBAFanFinder.Backend.Repositories.AddressRepository;
+import com.NBAFanFinder.Backend.Repositories.TeamRepository;
 import com.NBAFanFinder.Backend.Repositories.UserRepository;
 import com.NBAFanFinder.Backend.Security.JwtUtil;
 import com.NBAFanFinder.Backend.Services.AuthService;
@@ -28,6 +30,12 @@ public class AuthServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private AddressRepository addressRepository;
+
+    @Mock
+    private TeamRepository teamRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
