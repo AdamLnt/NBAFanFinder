@@ -1,7 +1,9 @@
 import axios from "axios";
 import type { GeocodingResult } from "../types/map";
 
-const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org";
+// Chemin relatif : on passe par le proxy nginx (location /nominatim/) qui ajoute le
+// User-Agent requis par leur usage policy et evite le blocage CORS du navigateur.
+const NOMINATIM_BASE_URL = "/nominatim";
 
 interface NominatimAddress {
   house_number?: string;

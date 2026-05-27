@@ -10,4 +10,17 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    proxy: {
+      // En dev, miroir du proxy nginx prod : evite le CORS Nominatim cote navigateur.
+      '/nominatim': {
+        target: 'https://nominatim.openstreetmap.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/nominatim/, ''),
+        headers: {
+          'User-Agent': 'NBAFanFinder-dev/1.0 (https://nbafanfinder.up.railway.app)',
+        },
+      },
+    },
+  },
 })
