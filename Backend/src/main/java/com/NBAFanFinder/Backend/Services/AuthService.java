@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -88,6 +89,7 @@ public class AuthService {
         }
 
         newUser.setActif(false);
+        newUser.setActivationToken(UUID.randomUUID().toString());
 
         attachTeams(newUser, request.equipesSupporteesIds());
 
@@ -101,14 +103,16 @@ public class AuthService {
             null,
             savedUser.getEmail(),
             savedUser.getNom(),
-            savedUser.getPrenom()
+            savedUser.getPrenom(),
+            savedUser.getActivationToken()
         );
     }
 
-    public void activate(Long id) {
-        User user = userRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé : " + id));
+    public void activate(String token) {
+        User user = userRepository.findByActivationToken(token)
+            .orElseThrow(() -> new NotFoundException("Token d'activation invalide ou déjà utilisé"));
         user.setActif(true);
+        user.setActivationToken(null);
         userRepository.save(user);
     }
 
@@ -117,6 +121,7 @@ public class AuthService {
             request.email() == null || request.password() == null) {
             throw new IllegalArgumentException("Tous les champs sont obligatoires");
         }
+        validatePasswordPolicy(request.password());
         AddressRequest adresse = request.adresse();
         if (adresse == null
             || isBlank(adresse.numero()) || isBlank(adresse.rue())
@@ -124,6 +129,19 @@ public class AuthService {
             || isBlank(adresse.pays())
             || adresse.latitude() == null || adresse.longitude() == null) {
             throw new IllegalArgumentException("L'adresse est obligatoire et doit être géolocalisée");
+        }
+    }
+
+    private void validatePasswordPolicy(String password) {
+        if (password.length() < 12
+            || !password.matches(".*[A-Z].*")
+            || !password.matches(".*[a-z].*")
+            || !password.matches(".*\\d.*")
+            || !password.matches(".*[^A-Za-z0-9].*")) {
+            throw new IllegalArgumentException(
+                "Le mot de passe doit contenir au moins 12 caractères, dont une majuscule, "
+                + "une minuscule, un chiffre et un caractère spécial."
+            );
         }
     }
 

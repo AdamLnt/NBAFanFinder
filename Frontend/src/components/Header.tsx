@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { authService } from "../services/authService";
+import { apiService } from "../services/apiService";
 import logoSvg from "../assets/logo.svg";
 import userPng from "../assets/user.png";
 import { MapIcon } from "./icons/MapIcon";
@@ -31,8 +31,8 @@ export const Header = () => {
           className="header__user-avatar"
         />
         <button
-          onClick={() => {
-            authService.logout();
+          onClick={async () => {
+            await apiService.logout();
             navigate("/login");
           }}
           className="header__logout-btn"

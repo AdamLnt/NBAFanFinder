@@ -1,6 +1,7 @@
 package com.NBAFanFinder.Backend.Services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,7 @@ public class ChatService {
             .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
 
         Chat chat = new Chat(request.nom(), request.description());
+        chat.setInviteCode(UUID.randomUUID().toString());
         chatRepository.save(chat);
 
         proprietaire.getChatsPossedes().add(chat);
@@ -73,11 +75,27 @@ public class ChatService {
     }
 
     public void joinChat(JoinChatRequest request, String email) {
+        if (request.inviteCode() == null || request.inviteCode().isBlank()) {
+            throw new UnauthorizedException("Code d'invitation requis");
+        }
+
         Chat chat = chatRepository.findById(request.chatId())
-            .orElseThrow(() -> new IllegalArgumentException("Chat non trouvé"));
+            .orElseThrow(() -> new NotFoundException("Chat non trouvé"));
+
+        if (!request.inviteCode().equals(chat.getInviteCode())) {
+            throw new UnauthorizedException("Code d'invitation invalide");
+        }
 
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
+
+        boolean alreadyOwner = chat.getProprietaires().stream()
+            .anyMatch(p -> p.getId().equals(user.getId()));
+        boolean alreadyMember = chat.getMembres().stream()
+            .anyMatch(m -> m.getId().equals(user.getId()));
+        if (alreadyOwner || alreadyMember) {
+            return;
+        }
 
         user.getChatsRejoints().add(chat);
         userRepository.save(user);

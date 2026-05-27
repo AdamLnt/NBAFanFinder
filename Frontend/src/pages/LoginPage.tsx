@@ -31,8 +31,8 @@ export const LoginPage = () => {
       const response = await apiService.login(form);
       authService.setAuth(response);
       navigate("/map");
-    } catch (err: any) {
-      setError(err.message || "Erreur lors de la connexion");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors de la connexion");
     } finally {
       setLoading(false);
     }

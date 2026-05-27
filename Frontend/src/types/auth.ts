@@ -31,6 +31,7 @@ export interface AuthResponse {
   email: string;
   nom: string;
   prenom: string;
+  activationToken?: string | null; // Renvoyé uniquement par /register
 }
 
 export interface ErrorResponse {

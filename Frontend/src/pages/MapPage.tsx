@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from "react-leaflet";
 import L from "leaflet";
+import markerIconUrl from "leaflet/dist/images/marker-icon.png";
+import markerIcon2xUrl from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
 import { Header } from "../components/Header";
 import { mapService } from "../services/mapService";
 import { teamService } from "../services/teamService";
@@ -10,11 +13,12 @@ import type { MapUser } from "../types/map";
 import type { Team } from "../types/team";
 import "../styles/MapPage.css";
 
-// Fix Leaflet default marker icons not loading correctly under bundlers
+// Bundle Leaflet's default marker assets via Vite so they are served same-origin
+// (the CSP only allows images from 'self', data: and the tile server).
 const defaultIcon = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconUrl: markerIconUrl,
+  iconRetinaUrl: markerIcon2xUrl,
+  shadowUrl: markerShadowUrl,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -35,8 +39,7 @@ const distanceKm = (a: [number, number], b: [number, number]): number => {
   const sinLat = Math.sin(dLat / 2);
   const sinLon = Math.sin(dLon / 2);
   const h =
-    sinLat * sinLat +
-    Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * sinLon * sinLon;
+    sinLat * sinLat + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * sinLon * sinLon;
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h));
 };
 
@@ -68,7 +71,10 @@ export const MapPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    teamService.getAll().then(setTeams).catch(() => setTeams([]));
+    teamService
+      .getAll()
+      .then(setTeams)
+      .catch(() => setTeams([]));
   }, []);
 
   useEffect(() => {
@@ -82,22 +88,32 @@ export const MapPage = () => {
   }, []);
 
   useEffect(() => {
+    let ignore = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-dep-change pattern: re-fetch users when selectedTeamId changes
     setLoading(true);
     mapService
       .getUsers(selectedTeamId === "" ? null : selectedTeamId)
       .then((data) => {
+        if (ignore) return;
         setUsers(data);
         setError(null);
       })
-      .catch((err) => setError(err instanceof Error ? err.message : "Erreur de chargement"))
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (ignore) return;
+        setError(err instanceof Error ? err.message : "Erreur de chargement");
+      })
+      .finally(() => {
+        if (ignore) return;
+        setLoading(false);
+      });
+    return () => {
+      ignore = true;
+    };
   }, [selectedTeamId]);
 
   const filteredUsers = useMemo(() => {
     if (radiusKm === null || !homePosition) return users;
-    return users.filter(
-      (u) => distanceKm(homePosition, [u.latitude, u.longitude]) <= radiusKm
-    );
+    return users.filter((u) => distanceKm(homePosition, [u.latitude, u.longitude]) <= radiusKm);
   }, [users, radiusKm, homePosition]);
 
   const countLabel = filteredUsers.length > 1 ? "utilisateurs" : "utilisateur";
@@ -119,12 +135,16 @@ export const MapPage = () => {
       <div className="map-body">
         <aside className="map-sidebar">
           <div className="map-sidebar__section">
-            <label htmlFor="team-filter" className="map-sidebar__label">Filtrer par équipe</label>
+            <label htmlFor="team-filter" className="map-sidebar__label">
+              Filtrer par équipe
+            </label>
             <select
               id="team-filter"
               className="map-search-input"
               value={selectedTeamId}
-              onChange={(e) => setSelectedTeamId(e.target.value === "" ? "" : Number(e.target.value))}
+              onChange={(e) =>
+                setSelectedTeamId(e.target.value === "" ? "" : Number(e.target.value))
+              }
             >
               <option value="">Toutes les équipes</option>
               {teams.map((team) => (
@@ -206,7 +226,9 @@ export const MapPage = () => {
             >
               <Popup>
                 <div className="map-popup">
-                  <strong>{user.prenom} {user.nom}</strong>
+                  <strong>
+                    {user.prenom} {user.nom}
+                  </strong>
                   <br />
                   {user.ville}
                   {user.equipes.length > 0 && (

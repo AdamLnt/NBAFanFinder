@@ -56,7 +56,7 @@ public class AuthControllerIntegrationTest {
             "10", "Rue de Rivoli", "Paris", "75001", "France", 48.8566, 2.3522
         );
         RegisterRequest req = new RegisterRequest(
-            "Test", "User", "test.user@email.com", "Pwd123!", null, addr, null
+            "Test", "User", "test.user@email.com", "Secure1!@Pass", null, addr, null
         );
 
         mockMvc.perform(post("/api/auth/register")
@@ -102,14 +102,15 @@ public class AuthControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/auth/activate/{id} active un compte existant")
+    @DisplayName("POST /api/auth/activate/{token} active un compte avec un token valide")
     void shouldActivateAccountViaController() throws Exception {
         User user = new User("Activate", "Me", "activate.me@email.com",
                 passwordEncoder.encode("Secret1!"));
         user.setActif(false);
+        user.setActivationToken("token-activate-me-123");
         userRepository.save(user);
 
-        mockMvc.perform(post("/api/auth/activate/" + user.getId()))
+        mockMvc.perform(post("/api/auth/activate/" + user.getActivationToken()))
                 .andExpect(status().isOk());
     }
 }

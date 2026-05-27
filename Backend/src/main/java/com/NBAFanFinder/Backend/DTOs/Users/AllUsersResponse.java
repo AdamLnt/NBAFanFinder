@@ -1,24 +1,21 @@
 package com.NBAFanFinder.Backend.DTOs.Users;
 
-import java.time.LocalDate;
-
 import com.NBAFanFinder.Backend.Entities.User;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+// RGPD : la date de naissance ne sort PAS dans le listing public.
+// Elle reste accessible sur le profil dedie (UserResponse#findById) si necessaire.
 public record AllUsersResponse(
     long id,
     String nom,
     String prenom,
-    String email,
-    @JsonProperty("date_naissance") LocalDate dateNaissance
+    String email
 ) {
     public static AllUsersResponse from(User user) {
         return new AllUsersResponse(
             user.getId(),
             user.getNom(),
             user.getPrenom(),
-            user.getEmail(),
-            user.getDateNaissance()
+            user.getEmail()
         );
     }
 }

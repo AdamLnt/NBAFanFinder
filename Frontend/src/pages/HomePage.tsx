@@ -3,25 +3,25 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Card, Title, SubmitButton } from "../components/FormComponents";
 import { authService } from "../services/authService";
+import { apiService } from "../services/apiService";
 import { useEffect, useState } from "react";
 import "../styles/shared.css";
 import "../styles/HomePage.css";
 
 export const HomePage = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<{ email: string; nom: string; prenom: string } | null>(null);
+  const [user] = useState<{ email: string; nom: string; prenom: string } | null>(() =>
+    authService.isAuthenticated() ? authService.getUser() : null
+  );
 
   useEffect(() => {
     if (!authService.isAuthenticated()) {
       navigate("/login");
-      return;
     }
-    const userData = authService.getUser();
-    setUser(userData);
   }, [navigate]);
 
-  const handleLogout = () => {
-    authService.logout();
+  const handleLogout = async () => {
+    await apiService.logout();
     navigate("/login");
   };
 

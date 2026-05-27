@@ -31,7 +31,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/activation/:userId" element={<ActivationPage />} />
+            <Route path="/activation/:token" element={<ActivationPage />} />
             <Route
               path="/home"
               element={

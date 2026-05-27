@@ -57,10 +57,10 @@ public class AuthServiceRegisterTest {
     @DisplayName("Inscrit un utilisateur avec succès et hash le mot de passe")
     void shouldRegisterUserSuccessfully() {
         RegisterRequest request = new RegisterRequest(
-            "Dupont", "Jean", "jean@email.com", "plainPwd", null, VALID_ADDRESS, null
+            "Dupont", "Jean", "jean@email.com", "PlainPwd1@xx", null, VALID_ADDRESS, null
         );
         when(userRepository.existsByEmail("jean@email.com")).thenReturn(false);
-        when(passwordEncoder.encode("plainPwd")).thenReturn("hashed");
+        when(passwordEncoder.encode("PlainPwd1@xx")).thenReturn("hashed");
         when(userRepository.save(any(User.class))).thenAnswer(inv -> {
             User u = inv.getArgument(0);
             u.setId(42L);
@@ -72,14 +72,14 @@ public class AuthServiceRegisterTest {
         assertThat(response.id()).isEqualTo(42L);
         assertThat(response.email()).isEqualTo("jean@email.com");
         assertThat(response.token()).isNull();
-        verify(passwordEncoder).encode("plainPwd");
+        verify(passwordEncoder).encode("PlainPwd1@xx");
     }
 
     @Test
     @DisplayName("Refuse l'inscription si l'email est déjà utilisé")
     void shouldRejectRegisterWhenEmailAlreadyExists() {
         RegisterRequest request = new RegisterRequest(
-            "Dupont", "Jean", "jean@email.com", "plainPwd", null, VALID_ADDRESS, null
+            "Dupont", "Jean", "jean@email.com", "PlainPwd1@xx", null, VALID_ADDRESS, null
         );
         when(userRepository.existsByEmail("jean@email.com")).thenReturn(true);
 
@@ -92,7 +92,7 @@ public class AuthServiceRegisterTest {
     @DisplayName("Refuse l'inscription si un champ obligatoire est manquant")
     void shouldRejectRegisterWhenFieldMissing() {
         RegisterRequest request = new RegisterRequest(
-            null, "Jean", "jean@email.com", "plainPwd", null, VALID_ADDRESS, null
+            null, "Jean", "jean@email.com", "PlainPwd1@xx", null, VALID_ADDRESS, null
         );
 
         assertThatThrownBy(() -> authService.register(request))
@@ -104,7 +104,7 @@ public class AuthServiceRegisterTest {
     @DisplayName("Refuse l'inscription si l'adresse est manquante")
     void shouldRejectRegisterWhenAddressMissing() {
         RegisterRequest request = new RegisterRequest(
-            "Dupont", "Jean", "jean@email.com", "plainPwd", null, null, null
+            "Dupont", "Jean", "jean@email.com", "PlainPwd1@xx", null, null, null
         );
 
         assertThatThrownBy(() -> authService.register(request))
@@ -113,26 +113,41 @@ public class AuthServiceRegisterTest {
     }
 
     @Test
-    @DisplayName("Active un compte utilisateur existant")
+    @DisplayName("Refuse l'inscription si le mot de passe ne respecte pas la politique")
+    void shouldRejectRegisterWhenPasswordTooWeak() {
+        RegisterRequest request = new RegisterRequest(
+            "Dupont", "Jean", "jean@email.com", "weakpwd", null, VALID_ADDRESS, null
+        );
+
+        assertThatThrownBy(() -> authService.register(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("12 caractères");
+    }
+
+    @Test
+    @DisplayName("Active un compte utilisateur existant via son token")
     void shouldActivateUserSuccessfully() {
+        String token = "activation-token-abc";
         User user = new User("Dupont", "Jean", "jean@email.com", "hashed");
         user.setId(1L);
         user.setActif(false);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        user.setActivationToken(token);
+        when(userRepository.findByActivationToken(token)).thenReturn(Optional.of(user));
 
-        authService.activate(1L);
+        authService.activate(token);
 
         assertThat(user.getActif()).isTrue();
+        assertThat(user.getActivationToken()).isNull();
         verify(userRepository).save(user);
     }
 
     @Test
-    @DisplayName("Lève NotFoundException quand on active un id inconnu")
-    void shouldThrowWhenActivateUnknownUser() {
-        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+    @DisplayName("Lève NotFoundException quand on active un token inconnu")
+    void shouldThrowWhenActivateUnknownToken() {
+        when(userRepository.findByActivationToken("does-not-exist")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> authService.activate(99L))
+        assertThatThrownBy(() -> authService.activate("does-not-exist"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("Utilisateur non trouvé");
+                .hasMessageContaining("Token d'activation");
     }
 }

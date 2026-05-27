@@ -4,23 +4,24 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Card, Title, SubmitButton } from "../components/FormComponents";
 import { apiService } from "../services/apiService";
+import { API_BASE_URL } from "../services/apiConfig";
 import "../styles/shared.css";
 import "../styles/ActivationPage.css";
 
 export const ActivationPage = () => {
   const navigate = useNavigate();
-  const { userId } = useParams<{ userId: string }>();
+  const { token } = useParams<{ token: string }>();
   const [activated, setActivated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const activationLink = `http://localhost:8080/api/auth/activate/${userId}`;
+  const activationLink = token ? `${API_BASE_URL}/auth/activate/${encodeURIComponent(token)}` : "";
 
   const handleActivate = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
 
-    if (!userId) {
-      setError("ID utilisateur manquant");
+    if (!token) {
+      setError("Token d'activation manquant");
       return;
     }
 
@@ -28,10 +29,10 @@ export const ActivationPage = () => {
     setError(null);
 
     try {
-      await apiService.activateAccount(parseInt(userId));
+      await apiService.activateAccount(token);
       setActivated(true);
-    } catch (err: any) {
-      setError(err.message || "Erreur lors de l'activation du compte");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors de l'activation du compte");
     } finally {
       setLoading(false);
     }

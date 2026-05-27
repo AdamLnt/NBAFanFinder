@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { AxiosInstance } from "axios";
-import { authService } from "./authService";
+import { API_BASE_URL } from "./apiConfig";
 import type {
   Chat,
   Message,
@@ -12,18 +12,10 @@ import type {
 } from "../types/chat";
 
 const chatClient: AxiosInstance = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: API_BASE_URL,
   headers: { "Content-Type": "application/json" },
+  withCredentials: true,
 });
-
-chatClient.interceptors.request.use(
-  (config) => {
-    const token = authService.getToken();
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
 
 export const chatApiService = {
   async getChats(): Promise<Chat[]> {

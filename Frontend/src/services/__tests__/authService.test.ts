@@ -2,12 +2,12 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { authService } from "../authService";
 import type { AuthResponse } from "../../types/auth";
 
-describe("authService", () => {
+describe("authService (cookie-based session)", () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
-  it("setAuth stocke le token et l'utilisateur dans le localStorage", () => {
+  it("setAuth stocke uniquement les infos utilisateur (pas le token)", () => {
     const response: AuthResponse = {
       id: 1,
       token: "tok-123",
@@ -18,16 +18,17 @@ describe("authService", () => {
 
     authService.setAuth(response);
 
-    expect(authService.getToken()).toBe("tok-123");
     expect(authService.getUser()).toEqual({
       id: 1,
       email: "user@email.com",
       nom: "Doe",
       prenom: "John",
     });
+    // Le token ne doit JAMAIS etre stocke cote client - il vit dans le cookie HttpOnly
+    expect(localStorage.getItem("nba_fan_finder_token")).toBeNull();
   });
 
-  it("isAuthenticated renvoie true quand un token est présent", () => {
+  it("isAuthenticated renvoie true quand l'utilisateur est en localStorage", () => {
     authService.setAuth({
       id: 1,
       token: "tok",
@@ -39,11 +40,11 @@ describe("authService", () => {
     expect(authService.isAuthenticated()).toBe(true);
   });
 
-  it("isAuthenticated renvoie false sans token", () => {
+  it("isAuthenticated renvoie false sans utilisateur", () => {
     expect(authService.isAuthenticated()).toBe(false);
   });
 
-  it("logout supprime le token et l'utilisateur", () => {
+  it("clearLocalUser supprime l'utilisateur du localStorage", () => {
     authService.setAuth({
       id: 1,
       token: "tok",
@@ -52,29 +53,12 @@ describe("authService", () => {
       prenom: "John",
     });
 
-    authService.logout();
+    authService.clearLocalUser();
 
-    expect(authService.getToken()).toBeNull();
     expect(authService.getUser()).toBeNull();
   });
 
-  it("getAuthHeader retourne un header Authorization si token présent", () => {
-    authService.setAuth({
-      id: 1,
-      token: "abc",
-      email: "user@email.com",
-      nom: "Doe",
-      prenom: "John",
-    });
-
-    expect(authService.getAuthHeader()).toEqual({ Authorization: "Bearer abc" });
-  });
-
-  it("getAuthHeader retourne un objet vide sans token", () => {
-    expect(authService.getAuthHeader()).toEqual({});
-  });
-
-  it("getUser renvoie null si le JSON stocké est corrompu", () => {
+  it("getUser renvoie null si le JSON stocke est corrompu", () => {
     localStorage.setItem("nba_fan_finder_user", "{not valid json");
 
     expect(authService.getUser()).toBeNull();
