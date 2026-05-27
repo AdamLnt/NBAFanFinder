@@ -11,6 +11,7 @@ import com.NBAFanFinder.Backend.Entities.Chat;
 import com.NBAFanFinder.Backend.Entities.Message;
 import com.NBAFanFinder.Backend.Entities.User;
 import com.NBAFanFinder.Backend.Exceptions.NotFoundException;
+import com.NBAFanFinder.Backend.Exceptions.UnauthorizedException;
 import com.NBAFanFinder.Backend.Repositories.ChatRepository;
 import com.NBAFanFinder.Backend.Repositories.MessageRepository;
 import com.NBAFanFinder.Backend.Repositories.UserRepository;
@@ -29,7 +30,16 @@ public class MessageService {
         this.userRepository = userRepository;
     }
 
-    public List<AllMessagesResponse> getAllMessagesFromChat(Long chatId) {
+    public List<AllMessagesResponse> getAllMessagesFromChat(Long chatId, String email) {
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new NotFoundException("Chat non trouvé"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
+
+        if (!isMember(chat, user)) {
+            throw new UnauthorizedException("Accès interdit : vous n'appartenez pas à ce chat");
+        }
+
         return messageRepository.findByChatId(chatId).stream()
                 .map(AllMessagesResponse::from)
                 .toList();
@@ -41,6 +51,17 @@ public class MessageService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé"));
 
+        if (!isMember(chat, user)) {
+            throw new UnauthorizedException("Accès interdit : vous n'appartenez pas à ce chat");
+        }
+
         messageRepository.save(new Message(request.texte(), chat, user));
+    }
+
+    private boolean isMember(Chat chat, User user) {
+        Long uid = user.getId();
+        boolean isOwner = chat.getProprietaires().stream().anyMatch(p -> p.getId().equals(uid));
+        boolean isJoined = chat.getMembres().stream().anyMatch(m -> m.getId().equals(uid));
+        return isOwner || isJoined;
     }
 }

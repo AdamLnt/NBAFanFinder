@@ -3,6 +3,7 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Card, Title, SubmitButton } from "../components/FormComponents";
 import { authService } from "../services/authService";
+import { apiService } from "../services/apiService";
 import { useEffect, useState } from "react";
 import "../styles/shared.css";
 import "../styles/HomePage.css";
@@ -20,8 +21,8 @@ export const HomePage = () => {
     setUser(userData);
   }, [navigate]);
 
-  const handleLogout = () => {
-    authService.logout();
+  const handleLogout = async () => {
+    await apiService.logout();
     navigate("/login");
   };
 

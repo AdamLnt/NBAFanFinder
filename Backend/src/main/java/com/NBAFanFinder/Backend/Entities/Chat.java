@@ -20,6 +20,9 @@ public class Chat {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "invite_code", nullable = false, unique = true)
+    private String inviteCode;
+
     @ManyToMany(mappedBy = "chatsPossedes")
     private Set<User> proprietaires = new HashSet<>();
 
@@ -61,6 +64,14 @@ public class Chat {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
     }
 
     public Set<User> getProprietaires() {

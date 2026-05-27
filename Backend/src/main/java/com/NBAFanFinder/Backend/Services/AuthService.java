@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -88,6 +89,7 @@ public class AuthService {
         }
 
         newUser.setActif(false);
+        newUser.setActivationToken(UUID.randomUUID().toString());
 
         attachTeams(newUser, request.equipesSupporteesIds());
 
@@ -101,14 +103,16 @@ public class AuthService {
             null,
             savedUser.getEmail(),
             savedUser.getNom(),
-            savedUser.getPrenom()
+            savedUser.getPrenom(),
+            savedUser.getActivationToken()
         );
     }
 
-    public void activate(Long id) {
-        User user = userRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("Utilisateur non trouvé : " + id));
+    public void activate(String token) {
+        User user = userRepository.findByActivationToken(token)
+            .orElseThrow(() -> new NotFoundException("Token d'activation invalide ou déjà utilisé"));
         user.setActif(true);
+        user.setActivationToken(null);
         userRepository.save(user);
     }
 

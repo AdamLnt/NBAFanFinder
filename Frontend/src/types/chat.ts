@@ -8,6 +8,7 @@ export interface Chat {
   id: number;
   nom: string;
   description: string;
+  inviteCode: string;
   proprietaires: ChatMember[];
   membres: ChatMember[];
 }
@@ -39,6 +40,7 @@ export interface CreateChatRequest {
 
 export interface JoinChatRequest {
   chatId: number;
+  inviteCode: string;
 }
 
 export interface SendMessageRequest {

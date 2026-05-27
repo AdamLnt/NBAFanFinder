@@ -1,5 +1,9 @@
 package com.NBAFanFinder.Backend.Exceptions;
 
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -13,6 +17,8 @@ import com.NBAFanFinder.Backend.DTOs.ErrorResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // 400 - Argument métier invalide (ex: champ vide, utilisateur non trouvé)
     @ExceptionHandler(IllegalArgumentException.class)
@@ -59,12 +65,17 @@ public class GlobalExceptionHandler {
     // 409 - Violation de contrainte DB (ex: email déjà utilisé)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleConflict(DataIntegrityViolationException e) {
+        log.warn("DataIntegrityViolationException", e);
         return ResponseEntity.status(409).body(new ErrorResponse("Conflit : une ressource avec ces données existe déjà"));
     }
 
-    // 500 - Toute autre erreur non gérée
+    // 500 - Toute autre erreur non gérée : on log la cause cote serveur, on ne fuite rien au client
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e) {
-        return ResponseEntity.status(500).body(new ErrorResponse(e.getMessage()));
+        String requestId = UUID.randomUUID().toString();
+        log.error("Unhandled exception [requestId={}]", requestId, e);
+        return ResponseEntity.status(500).body(new ErrorResponse(
+            "Erreur interne. Référence : " + requestId
+        ));
     }
 }

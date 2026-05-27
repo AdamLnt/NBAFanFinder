@@ -30,13 +30,13 @@ public class MessageController {
         return ResponseEntity.ok("Message service is running!");
     }
 
-    @GetMapping("/chat/{chatId}")
-    public ResponseEntity<List<AllMessagesResponse>> getMessagesFromChat(@PathVariable Long chatId) {
-        return ResponseEntity.ok(messageService.getAllMessagesFromChat(chatId));
-    }
-
     private String getAuthenticatedEmail() {
         return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @GetMapping("/chat/{chatId}")
+    public ResponseEntity<List<AllMessagesResponse>> getMessagesFromChat(@PathVariable Long chatId) {
+        return ResponseEntity.ok(messageService.getAllMessagesFromChat(chatId, getAuthenticatedEmail()));
     }
 
     @PostMapping("/send")

@@ -23,10 +23,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final AuthCookieService cookieService;
 
-    public JwtFilter(JwtUtil jwtUtil, UserRepository userRepository) {
+    public JwtFilter(JwtUtil jwtUtil, UserRepository userRepository, AuthCookieService cookieService) {
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
+        this.cookieService = cookieService;
     }
 
     @Override
@@ -35,13 +37,17 @@ public class JwtFilter extends OncePerRequestFilter {
                                    FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader("Authorization");
+        String token = cookieService.readAuthCookie(request);
 
-        String token = null;
+        if (token == null) {
+            String authorizationHeader = request.getHeader("Authorization");
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                token = authorizationHeader.substring(7);
+            }
+        }
+
         String username = null;
-
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            token = authorizationHeader.substring(7);
+        if (token != null) {
             try {
                 username = jwtUtil.getUsernameFromToken(token);
             } catch (Exception e) {

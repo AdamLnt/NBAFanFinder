@@ -1,21 +1,12 @@
 import axios from "axios";
 import type { AxiosInstance } from "axios";
 import type { MapUser, UserLocation } from "../types/map";
-import { authService } from "./authService";
-
-const API_BASE_URL = "http://localhost:8080/api";
+import { API_BASE_URL } from "./apiConfig";
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: { "Content-Type": "application/json" },
-});
-
-apiClient.interceptors.request.use((config) => {
-  const token = authService.getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+  withCredentials: true,
 });
 
 export const mapService = {

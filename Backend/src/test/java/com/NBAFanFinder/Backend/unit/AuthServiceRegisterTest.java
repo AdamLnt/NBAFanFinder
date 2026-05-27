@@ -113,26 +113,29 @@ public class AuthServiceRegisterTest {
     }
 
     @Test
-    @DisplayName("Active un compte utilisateur existant")
+    @DisplayName("Active un compte utilisateur existant via son token")
     void shouldActivateUserSuccessfully() {
+        String token = "activation-token-abc";
         User user = new User("Dupont", "Jean", "jean@email.com", "hashed");
         user.setId(1L);
         user.setActif(false);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        user.setActivationToken(token);
+        when(userRepository.findByActivationToken(token)).thenReturn(Optional.of(user));
 
-        authService.activate(1L);
+        authService.activate(token);
 
         assertThat(user.getActif()).isTrue();
+        assertThat(user.getActivationToken()).isNull();
         verify(userRepository).save(user);
     }
 
     @Test
-    @DisplayName("Lève NotFoundException quand on active un id inconnu")
-    void shouldThrowWhenActivateUnknownUser() {
-        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+    @DisplayName("Lève NotFoundException quand on active un token inconnu")
+    void shouldThrowWhenActivateUnknownToken() {
+        when(userRepository.findByActivationToken("does-not-exist")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> authService.activate(99L))
+        assertThatThrownBy(() -> authService.activate("does-not-exist"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("Utilisateur non trouvé");
+                .hasMessageContaining("Token d'activation");
     }
 }

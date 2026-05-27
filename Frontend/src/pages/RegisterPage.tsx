@@ -107,7 +107,11 @@ export const RegisterPage = () => {
         },
         equipes_supportees_ids: selectedTeamIds,
       });
-      navigate(`/activation/${response.id}`);
+      if (!response.activationToken) {
+        setError("Inscription effectuée mais lien d'activation manquant. Contactez le support.");
+        return;
+      }
+      navigate(`/activation/${response.activationToken}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'inscription");
     } finally {

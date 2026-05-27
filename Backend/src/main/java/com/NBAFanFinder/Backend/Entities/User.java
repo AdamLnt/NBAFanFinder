@@ -39,6 +39,9 @@ public class User {
     @Column(nullable = false)
     private Boolean actif = false;
 
+    @Column(name = "activation_token", unique = true)
+    private String activationToken;
+
     @ManyToMany
     @JoinTable(
         name = "ajouter",
@@ -178,6 +181,14 @@ public class User {
 
     public void setActif(Boolean actif) {
         this.actif = actif;
+    }
+
+    public String getActivationToken() {
+        return activationToken;
+    }
+
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
     }
 
     public Set<User> getAmis() {

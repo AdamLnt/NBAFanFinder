@@ -140,8 +140,8 @@ export const ChatPage = () => {
     setSearchParams(searchParams, { replace: true });
   }, [startWithParam, users, chats, loadingChats, searchParams, setSearchParams]);
 
-  const handleJoinChat = async (chatId: number) => {
-    await chatApiService.joinChat({ chatId });
+  const handleJoinChat = async (chatId: number, inviteCode: string) => {
+    await chatApiService.joinChat({ chatId, inviteCode });
     setModalOpen(false);
     const updated = await chatApiService.getChats();
     setChats(updated);

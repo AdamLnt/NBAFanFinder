@@ -6,7 +6,7 @@ interface Props {
   currentUserId: number;
   onClose: () => void;
   onCreateChat: (nom: string, description: string, membresIds: number[]) => Promise<void>;
-  onJoinChat: (chatId: number) => Promise<void>;
+  onJoinChat: (chatId: number, inviteCode: string) => Promise<void>;
 }
 
 export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinChat }: Props) => {
@@ -14,6 +14,7 @@ export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinCh
   const [nom, setNom] = useState("");
   const [description, setDescription] = useState("");
   const [chatId, setChatId] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -57,13 +58,13 @@ export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinCh
 
   const handleJoin = async () => {
     const id = parseInt(chatId);
-    if (isNaN(id)) return;
+    if (isNaN(id) || !inviteCode.trim()) return;
     setLoading(true);
     setError("");
     try {
-      await onJoinChat(id);
+      await onJoinChat(id, inviteCode.trim());
     } catch {
-      setError("Chat introuvable ou erreur de connexion.");
+      setError("Chat introuvable, code invalide, ou erreur de connexion.");
     } finally {
       setLoading(false);
     }
@@ -201,7 +202,21 @@ export const CreateChatModal = ({ currentUserId, onClose, onCreateChat, onJoinCh
                 onChange={(e) => setChatId(e.target.value)}
               />
             </div>
-            <button className="modal__btn" onClick={handleJoin} disabled={!chatId || loading}>
+            <div className="modal__field">
+              <label className="modal__label">Code d'invitation</label>
+              <input
+                type="text"
+                className="modal__input"
+                placeholder="Code fourni par un membre du chat"
+                value={inviteCode}
+                onChange={(e) => setInviteCode(e.target.value)}
+              />
+            </div>
+            <button
+              className="modal__btn"
+              onClick={handleJoin}
+              disabled={!chatId || !inviteCode.trim() || loading}
+            >
               {loading ? "Connexion..." : "Rejoindre le chat"}
             </button>
           </div>

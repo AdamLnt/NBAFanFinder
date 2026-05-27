@@ -74,9 +74,17 @@ public class UserService {
             user.getNom(),
             user.getPrenom(),
             address.getVille(),
-            address.getLatitude(),
-            address.getLongitude(),
+            blurCoordinate(address.getLatitude()),
+            blurCoordinate(address.getLongitude()),
             teams
         );
+    }
+
+    // RGPD : on n'expose pas la position precise d'un utilisateur sur la carte publique.
+    // Arrondi a 2 decimales = precision ~1.1 km, suffisant pour visualiser une concentration
+    // de fans par zone sans permettre d'identifier le domicile.
+    private Double blurCoordinate(Double coord) {
+        if (coord == null) return null;
+        return Math.round(coord * 100.0) / 100.0;
     }
 }
