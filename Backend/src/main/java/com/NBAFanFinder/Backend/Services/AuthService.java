@@ -121,6 +121,7 @@ public class AuthService {
             request.email() == null || request.password() == null) {
             throw new IllegalArgumentException("Tous les champs sont obligatoires");
         }
+        validatePasswordPolicy(request.password());
         AddressRequest adresse = request.adresse();
         if (adresse == null
             || isBlank(adresse.numero()) || isBlank(adresse.rue())
@@ -128,6 +129,19 @@ public class AuthService {
             || isBlank(adresse.pays())
             || adresse.latitude() == null || adresse.longitude() == null) {
             throw new IllegalArgumentException("L'adresse est obligatoire et doit être géolocalisée");
+        }
+    }
+
+    private void validatePasswordPolicy(String password) {
+        if (password.length() < 12
+            || !password.matches(".*[A-Z].*")
+            || !password.matches(".*[a-z].*")
+            || !password.matches(".*\\d.*")
+            || !password.matches(".*[^A-Za-z0-9].*")) {
+            throw new IllegalArgumentException(
+                "Le mot de passe doit contenir au moins 12 caractères, dont une majuscule, "
+                + "une minuscule, un chiffre et un caractère spécial."
+            );
         }
     }
 

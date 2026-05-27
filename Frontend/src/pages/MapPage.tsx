@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from "react-leaflet";
 import L from "leaflet";
+import markerIconUrl from "leaflet/dist/images/marker-icon.png";
+import markerIcon2xUrl from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
 import { Header } from "../components/Header";
 import { mapService } from "../services/mapService";
 import { teamService } from "../services/teamService";
@@ -10,11 +13,12 @@ import type { MapUser } from "../types/map";
 import type { Team } from "../types/team";
 import "../styles/MapPage.css";
 
-// Fix Leaflet default marker icons not loading correctly under bundlers
+// Bundle Leaflet's default marker assets via Vite so they are served same-origin
+// (the CSP only allows images from 'self', data: and the tile server).
 const defaultIcon = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconUrl: markerIconUrl,
+  iconRetinaUrl: markerIcon2xUrl,
+  shadowUrl: markerShadowUrl,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],

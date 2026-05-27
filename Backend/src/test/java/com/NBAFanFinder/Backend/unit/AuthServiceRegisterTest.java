@@ -57,10 +57,10 @@ public class AuthServiceRegisterTest {
     @DisplayName("Inscrit un utilisateur avec succès et hash le mot de passe")
     void shouldRegisterUserSuccessfully() {
         RegisterRequest request = new RegisterRequest(
-            "Dupont", "Jean", "jean@email.com", "plainPwd", null, VALID_ADDRESS, null
+            "Dupont", "Jean", "jean@email.com", "PlainPwd1@xx", null, VALID_ADDRESS, null
         );
         when(userRepository.existsByEmail("jean@email.com")).thenReturn(false);
-        when(passwordEncoder.encode("plainPwd")).thenReturn("hashed");
+        when(passwordEncoder.encode("PlainPwd1@xx")).thenReturn("hashed");
         when(userRepository.save(any(User.class))).thenAnswer(inv -> {
             User u = inv.getArgument(0);
             u.setId(42L);
@@ -72,14 +72,14 @@ public class AuthServiceRegisterTest {
         assertThat(response.id()).isEqualTo(42L);
         assertThat(response.email()).isEqualTo("jean@email.com");
         assertThat(response.token()).isNull();
-        verify(passwordEncoder).encode("plainPwd");
+        verify(passwordEncoder).encode("PlainPwd1@xx");
     }
 
     @Test
     @DisplayName("Refuse l'inscription si l'email est déjà utilisé")
     void shouldRejectRegisterWhenEmailAlreadyExists() {
         RegisterRequest request = new RegisterRequest(
-            "Dupont", "Jean", "jean@email.com", "plainPwd", null, VALID_ADDRESS, null
+            "Dupont", "Jean", "jean@email.com", "PlainPwd1@xx", null, VALID_ADDRESS, null
         );
         when(userRepository.existsByEmail("jean@email.com")).thenReturn(true);
 
@@ -92,7 +92,7 @@ public class AuthServiceRegisterTest {
     @DisplayName("Refuse l'inscription si un champ obligatoire est manquant")
     void shouldRejectRegisterWhenFieldMissing() {
         RegisterRequest request = new RegisterRequest(
-            null, "Jean", "jean@email.com", "plainPwd", null, VALID_ADDRESS, null
+            null, "Jean", "jean@email.com", "PlainPwd1@xx", null, VALID_ADDRESS, null
         );
 
         assertThatThrownBy(() -> authService.register(request))
@@ -104,12 +104,24 @@ public class AuthServiceRegisterTest {
     @DisplayName("Refuse l'inscription si l'adresse est manquante")
     void shouldRejectRegisterWhenAddressMissing() {
         RegisterRequest request = new RegisterRequest(
-            "Dupont", "Jean", "jean@email.com", "plainPwd", null, null, null
+            "Dupont", "Jean", "jean@email.com", "PlainPwd1@xx", null, null, null
         );
 
         assertThatThrownBy(() -> authService.register(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("adresse");
+    }
+
+    @Test
+    @DisplayName("Refuse l'inscription si le mot de passe ne respecte pas la politique")
+    void shouldRejectRegisterWhenPasswordTooWeak() {
+        RegisterRequest request = new RegisterRequest(
+            "Dupont", "Jean", "jean@email.com", "weakpwd", null, VALID_ADDRESS, null
+        );
+
+        assertThatThrownBy(() -> authService.register(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("12 caractères");
     }
 
     @Test

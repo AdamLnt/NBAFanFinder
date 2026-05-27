@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/users/ping").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/teams").permitAll()
+                .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
 
                 .requestMatchers("/api/users/**").authenticated()
                 .requestMatchers("/api/chat/**").authenticated()

@@ -56,7 +56,7 @@ public class AuthControllerIntegrationTest {
             "10", "Rue de Rivoli", "Paris", "75001", "France", 48.8566, 2.3522
         );
         RegisterRequest req = new RegisterRequest(
-            "Test", "User", "test.user@email.com", "Pwd123!", null, addr, null
+            "Test", "User", "test.user@email.com", "Secure1!@Pass", null, addr, null
         );
 
         mockMvc.perform(post("/api/auth/register")

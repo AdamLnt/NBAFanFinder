@@ -12,8 +12,8 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 RUN apk add --no-cache wget && \
     addgroup -S app && adduser -S app -G app
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-  CMD wget -q --spider http://localhost:8080/ || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --retries=5 --start-period=60s \
+  CMD wget -q -O - http://localhost:8080/actuator/health | grep -q '"UP"' || exit 1
 USER app
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

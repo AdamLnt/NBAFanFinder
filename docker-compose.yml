@@ -37,6 +37,12 @@ services:
       mysql:
         condition: service_healthy
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:8080/actuator/health | grep -q '\"UP\"'"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     deploy:
       resources:
         limits:
@@ -47,6 +53,13 @@ services:
     build: ./Frontend
     ports:
       - "80:8080"
+    environment:
+      # En local : nginx ecoute sur 8080 et proxy vers le service docker "backend:8080".
+      # En prod (Railway/Render), surcharger BACKEND_HOST avec le hostname prive du backend
+      # et PORT avec celui injecte par la plateforme.
+      PORT: ${FRONTEND_PORT:-8080}
+      BACKEND_HOST: ${BACKEND_HOST:-backend}
+      BACKEND_PORT: ${BACKEND_PORT:-8080}
     depends_on:
       - backend
     restart: unless-stopped

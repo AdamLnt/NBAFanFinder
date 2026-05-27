@@ -12,6 +12,13 @@ import "../styles/FormComponents.css";
 import "../styles/shared.css";
 import "../styles/RegisterPage.css";
 
+const isPasswordStrong = (password: string): boolean =>
+  password.length >= 12 &&
+  /[A-Z]/.test(password) &&
+  /[a-z]/.test(password) &&
+  /\d/.test(password) &&
+  /[^A-Za-z0-9]/.test(password);
+
 export const RegisterPage = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -79,6 +86,13 @@ export const RegisterPage = () => {
     }
     if (form.password !== form.confirmation) {
       setError("Les mots de passe ne correspondent pas !");
+      return;
+    }
+    if (!isPasswordStrong(form.password)) {
+      setError(
+        "Le mot de passe doit contenir au moins 12 caractères, dont une majuscule, " +
+          "une minuscule, un chiffre et un caractère spécial."
+      );
       return;
     }
     if (!selectedAddress) {
@@ -183,6 +197,9 @@ export const RegisterPage = () => {
           </div>
 
           <Field label="Mot de passe" type="password" placeholder="Créez un mot de passe" name="password" value={form.password} onChange={handleChange} />
+          <p className="password-hint">
+            12 caractères minimum, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial.
+          </p>
           <Field label="Confirmation" type="password" placeholder="Confirmez le mot de passe" name="confirmation" value={form.confirmation} onChange={handleChange} />
 
           {error && <div className="error-box">{error}</div>}

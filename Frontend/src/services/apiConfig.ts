@@ -1,3 +1,4 @@
-// URL de base de l'API. En dev : laisser vide pour pointer sur le proxy Vite/nginx,
-// ou mettre http://localhost:8080/api. En prod : injecte VITE_API_URL au build.
-export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080/api";
+// URL de base de l'API. Par defaut, chemin relatif "/api" : le navigateur tape sur la
+// meme origine que le HTML, ce qui passe le CSP connect-src 'self'. Le proxy (Vite en
+// dev, nginx en prod) forward vers le backend. Surchargeable via VITE_API_URL au build.
+export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "/api";
