@@ -10,15 +10,14 @@ import "../styles/HomePage.css";
 
 export const HomePage = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<{ email: string; nom: string; prenom: string } | null>(null);
+  const [user] = useState<{ email: string; nom: string; prenom: string } | null>(() =>
+    authService.isAuthenticated() ? authService.getUser() : null
+  );
 
   useEffect(() => {
     if (!authService.isAuthenticated()) {
       navigate("/login");
-      return;
     }
-    const userData = authService.getUser();
-    setUser(userData);
   }, [navigate]);
 
   const handleLogout = async () => {

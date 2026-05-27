@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -10,6 +10,16 @@ import { chatApiService } from "../services/chatApiService";
 import { authService } from "../services/authService";
 import type { Chat, Message, User } from "../types/chat";
 import "../styles/ChatPage.css";
+
+const isDirectChatBetween = (c: Chat, userIdA: number, userIdB: number): boolean => {
+  const total = (c.proprietaires?.length ?? 0) + (c.membres?.length ?? 0);
+  if (total !== 2) return false;
+  const allIds = [
+    ...(c.proprietaires ?? []).map((p) => p.id),
+    ...(c.membres ?? []).map((m) => m.id),
+  ];
+  return allIds.includes(userIdA) && allIds.includes(userIdB);
+};
 
 export const ChatPage = () => {
   const user = authService.getUser();
@@ -32,8 +42,9 @@ export const ChatPage = () => {
     selectedChatRef.current = selectedChat;
   }, [selectedChat]);
 
+  const selectedChatId = selectedChat?.id;
   useEffect(() => {
-    if (!selectedChat) return;
+    if (!selectedChatId) return;
     const interval = setInterval(async () => {
       if (!selectedChatRef.current) return;
       try {
@@ -44,9 +55,9 @@ export const ChatPage = () => {
       }
     }, 3000);
     return () => clearInterval(interval);
-  }, [selectedChat?.id]);
+  }, [selectedChatId]);
 
-  const loadChats = async () => {
+  const loadChats = useCallback(async () => {
     setLoadingChats(true);
     try {
       const data = await chatApiService.getChats();
@@ -56,9 +67,9 @@ export const ChatPage = () => {
     } finally {
       setLoadingChats(false);
     }
-  };
+  }, []);
 
-  const loadMessages = async (chatId: number) => {
+  const loadMessages = useCallback(async (chatId: number) => {
     setLoadingMessages(true);
     try {
       const data = await chatApiService.getMessages(chatId);
@@ -68,19 +79,22 @@ export const ChatPage = () => {
     } finally {
       setLoadingMessages(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (userId) {
       loadChats();
       chatApiService.getUsers().then((all) => setUsers(all.filter((u) => u.id !== userId)));
     }
-  }, [userId]);
+  }, [userId, loadChats]);
 
-  const handleSelectChat = (chat: Chat) => {
-    setSelectedChat(chat);
-    loadMessages(chat.id);
-  };
+  const handleSelectChat = useCallback(
+    (chat: Chat) => {
+      setSelectedChat(chat);
+      loadMessages(chat.id);
+    },
+    [loadMessages]
+  );
 
   const handleSendMessage = async (text: string) => {
     if (!selectedChat) return;
@@ -95,33 +109,26 @@ export const ChatPage = () => {
     setChats(updated);
   };
 
-  const isDirectChatWith = (c: Chat, otherUserId: number) => {
-    const total = (c.proprietaires?.length ?? 0) + (c.membres?.length ?? 0);
-    if (total !== 2) return false;
-    const allIds = [
-      ...(c.proprietaires ?? []).map((p) => p.id),
-      ...(c.membres ?? []).map((m) => m.id),
-    ];
-    return allIds.includes(userId) && allIds.includes(otherUserId);
-  };
-
-  const handleStartChat = async (targetUser: User) => {
-    const existing = chats.find((c) => isDirectChatWith(c, targetUser.id));
-    if (existing) {
-      handleSelectChat(existing);
-      return;
-    }
-    await chatApiService.createChat({
-      nom: `${targetUser.prenom} ${targetUser.nom}`,
-      description: "Chat direct",
-      membresIds: [],
-      proprietairesIds: [targetUser.id],
-    });
-    const updated = await chatApiService.getChats();
-    setChats(updated);
-    const newChat = updated.find((c) => isDirectChatWith(c, targetUser.id));
-    if (newChat) handleSelectChat(newChat);
-  };
+  const handleStartChat = useCallback(
+    async (targetUser: User) => {
+      const existing = chats.find((c) => isDirectChatBetween(c, userId, targetUser.id));
+      if (existing) {
+        handleSelectChat(existing);
+        return;
+      }
+      await chatApiService.createChat({
+        nom: `${targetUser.prenom} ${targetUser.nom}`,
+        description: "Chat direct",
+        membresIds: [],
+        proprietairesIds: [targetUser.id],
+      });
+      const updated = await chatApiService.getChats();
+      setChats(updated);
+      const newChat = updated.find((c) => isDirectChatBetween(c, userId, targetUser.id));
+      if (newChat) handleSelectChat(newChat);
+    },
+    [chats, userId, handleSelectChat]
+  );
 
   useEffect(() => {
     if (!startWithParam) {
@@ -138,7 +145,7 @@ export const ChatPage = () => {
     handleStartChat(targetUser);
     searchParams.delete("startWith");
     setSearchParams(searchParams, { replace: true });
-  }, [startWithParam, users, chats, loadingChats, searchParams, setSearchParams]);
+  }, [startWithParam, users, chats, loadingChats, searchParams, setSearchParams, handleStartChat]);
 
   const handleJoinChat = async (chatId: number, inviteCode: string) => {
     await chatApiService.joinChat({ chatId, inviteCode });

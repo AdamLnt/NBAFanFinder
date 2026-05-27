@@ -15,8 +15,8 @@ export const apiService = {
     try {
       const response = await apiClient.post<AuthResponse>("/register", data);
       return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
         throw new Error(error.response.data.error);
       }
       throw new Error("Erreur lors de l'inscription. Veuillez réessayer.");
@@ -27,8 +27,8 @@ export const apiService = {
     try {
       const response = await apiClient.post<AuthResponse>("/login", data);
       return response.data;
-    } catch (error: any) {
-      if (error.response?.data?.error) {
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
         throw new Error(error.response.data.error);
       }
       throw new Error("Erreur lors de la connexion. Vérifiez vos identifiants.");
@@ -38,8 +38,8 @@ export const apiService = {
   async activateAccount(activationToken: string): Promise<void> {
     try {
       await apiClient.post(`/activate/${encodeURIComponent(activationToken)}`);
-    } catch (error: any) {
-      if (error.response?.data?.error) {
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
         throw new Error(error.response.data.error);
       }
       throw new Error("Erreur lors de l'activation du compte.");

@@ -86,15 +86,27 @@ export const MapPage = () => {
   }, []);
 
   useEffect(() => {
+    let ignore = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-dep-change pattern: re-fetch users when selectedTeamId changes
     setLoading(true);
     mapService
       .getUsers(selectedTeamId === "" ? null : selectedTeamId)
       .then((data) => {
+        if (ignore) return;
         setUsers(data);
         setError(null);
       })
-      .catch((err) => setError(err instanceof Error ? err.message : "Erreur de chargement"))
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (ignore) return;
+        setError(err instanceof Error ? err.message : "Erreur de chargement");
+      })
+      .finally(() => {
+        if (ignore) return;
+        setLoading(false);
+      });
+    return () => {
+      ignore = true;
+    };
   }, [selectedTeamId]);
 
   const filteredUsers = useMemo(() => {

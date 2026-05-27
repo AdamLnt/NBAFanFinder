@@ -33,8 +33,8 @@ export const ActivationPage = () => {
     try {
       await apiService.activateAccount(token);
       setActivated(true);
-    } catch (err: any) {
-      setError(err.message || "Erreur lors de l'activation du compte");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors de l'activation du compte");
     } finally {
       setLoading(false);
     }
