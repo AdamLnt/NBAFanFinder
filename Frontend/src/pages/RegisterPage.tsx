@@ -39,7 +39,10 @@ export const RegisterPage = () => {
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    teamService.getAll().then(setTeams).catch(() => setTeams([]));
+    teamService
+      .getAll()
+      .then(setTeams)
+      .catch(() => setTeams([]));
   }, []);
 
   useEffect(() => {
@@ -140,12 +143,37 @@ export const RegisterPage = () => {
       <main className="register-main">
         <Card>
           <Title>Inscription</Title>
-          <Field label="Nom" placeholder="Entrez votre nom" name="nom" value={form.nom} onChange={handleChange} />
-          <Field label="Prénom" placeholder="Entrez votre prénom" name="prenom" value={form.prenom} onChange={handleChange} />
-          <Field label="Email" type="email" placeholder="exemple@email.com" name="email" value={form.email} onChange={handleChange} />
+          <Field
+            label="Nom"
+            placeholder="Entrez votre nom"
+            name="nom"
+            value={form.nom}
+            onChange={handleChange}
+          />
+          <Field
+            label="Prénom"
+            placeholder="Entrez votre prénom"
+            name="prenom"
+            value={form.prenom}
+            onChange={handleChange}
+          />
+          <Field
+            label="Email"
+            type="email"
+            placeholder="exemple@email.com"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+          />
           <div className="form-field">
             <Label>Date de naissance</Label>
-            <input type="date" name="dateNaissance" value={form.dateNaissance} onChange={handleChange} className="form-input" />
+            <input
+              type="date"
+              name="dateNaissance"
+              value={form.dateNaissance}
+              onChange={handleChange}
+              className="form-input"
+            />
           </div>
 
           <div className="form-field address-field">
@@ -196,11 +224,26 @@ export const RegisterPage = () => {
             </div>
           </div>
 
-          <Field label="Mot de passe" type="password" placeholder="Créez un mot de passe" name="password" value={form.password} onChange={handleChange} />
+          <Field
+            label="Mot de passe"
+            type="password"
+            placeholder="Créez un mot de passe"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+          />
           <p className="password-hint">
-            12 caractères minimum, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial.
+            12 caractères minimum, avec au moins une majuscule, une minuscule, un chiffre et un
+            caractère spécial.
           </p>
-          <Field label="Confirmation" type="password" placeholder="Confirmez le mot de passe" name="confirmation" value={form.confirmation} onChange={handleChange} />
+          <Field
+            label="Confirmation"
+            type="password"
+            placeholder="Confirmez le mot de passe"
+            name="confirmation"
+            value={form.confirmation}
+            onChange={handleChange}
+          />
 
           {error && <div className="error-box">{error}</div>}
 

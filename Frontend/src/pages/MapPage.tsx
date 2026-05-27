@@ -39,8 +39,7 @@ const distanceKm = (a: [number, number], b: [number, number]): number => {
   const sinLat = Math.sin(dLat / 2);
   const sinLon = Math.sin(dLon / 2);
   const h =
-    sinLat * sinLat +
-    Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * sinLon * sinLon;
+    sinLat * sinLat + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * sinLon * sinLon;
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h));
 };
 
@@ -72,7 +71,10 @@ export const MapPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    teamService.getAll().then(setTeams).catch(() => setTeams([]));
+    teamService
+      .getAll()
+      .then(setTeams)
+      .catch(() => setTeams([]));
   }, []);
 
   useEffect(() => {
@@ -111,9 +113,7 @@ export const MapPage = () => {
 
   const filteredUsers = useMemo(() => {
     if (radiusKm === null || !homePosition) return users;
-    return users.filter(
-      (u) => distanceKm(homePosition, [u.latitude, u.longitude]) <= radiusKm
-    );
+    return users.filter((u) => distanceKm(homePosition, [u.latitude, u.longitude]) <= radiusKm);
   }, [users, radiusKm, homePosition]);
 
   const countLabel = filteredUsers.length > 1 ? "utilisateurs" : "utilisateur";
@@ -135,12 +135,16 @@ export const MapPage = () => {
       <div className="map-body">
         <aside className="map-sidebar">
           <div className="map-sidebar__section">
-            <label htmlFor="team-filter" className="map-sidebar__label">Filtrer par équipe</label>
+            <label htmlFor="team-filter" className="map-sidebar__label">
+              Filtrer par équipe
+            </label>
             <select
               id="team-filter"
               className="map-search-input"
               value={selectedTeamId}
-              onChange={(e) => setSelectedTeamId(e.target.value === "" ? "" : Number(e.target.value))}
+              onChange={(e) =>
+                setSelectedTeamId(e.target.value === "" ? "" : Number(e.target.value))
+              }
             >
               <option value="">Toutes les équipes</option>
               {teams.map((team) => (
@@ -222,7 +226,9 @@ export const MapPage = () => {
             >
               <Popup>
                 <div className="map-popup">
-                  <strong>{user.prenom} {user.nom}</strong>
+                  <strong>
+                    {user.prenom} {user.nom}
+                  </strong>
                   <br />
                   {user.ville}
                   {user.equipes.length > 0 && (

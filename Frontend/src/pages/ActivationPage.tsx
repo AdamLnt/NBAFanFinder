@@ -15,9 +15,7 @@ export const ActivationPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const activationLink = token
-    ? `${API_BASE_URL}/auth/activate/${encodeURIComponent(token)}`
-    : "";
+  const activationLink = token ? `${API_BASE_URL}/auth/activate/${encodeURIComponent(token)}` : "";
 
   const handleActivate = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
