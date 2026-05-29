@@ -183,7 +183,7 @@ jobs:
           docker load < frontend.tar.gz
 
       - name: Scan backend
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: nbafanfinder-backend:${{ github.sha }}
           format: table
@@ -191,7 +191,7 @@ jobs:
           severity: CRITICAL
 
       - name: Scan frontend
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: nbafanfinder-frontend:${{ github.sha }}
           format: table
