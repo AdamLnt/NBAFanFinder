@@ -18,6 +18,9 @@ export default defineConfig({
         "src/test/**",
         "src/types/**",
         "src/styles/**",
+        // Les fichiers de test ne doivent pas compter dans la couverture du code source
+        "src/**/*.test.{ts,tsx}",
+        "src/**/__tests__/**",
       ],
     },
   },
