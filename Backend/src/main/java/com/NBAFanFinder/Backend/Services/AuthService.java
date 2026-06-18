@@ -133,11 +133,23 @@ public class AuthService {
     }
 
     private void validatePasswordPolicy(String password) {
-        if (password.length() < 12
-            || !password.matches(".*[A-Z].*")
-            || !password.matches(".*[a-z].*")
-            || !password.matches(".*\\d.*")
-            || !password.matches(".*[^A-Za-z0-9].*")) {
+        boolean hasUpper = false;
+        boolean hasLower = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+            if (c >= 'A' && c <= 'Z') {
+                hasUpper = true;
+            } else if (c >= 'a' && c <= 'z') {
+                hasLower = true;
+            } else if (c >= '0' && c <= '9') {
+                hasDigit = true;
+            } else {
+                hasSpecial = true;
+            }
+        }
+        if (password.length() < 12 || !hasUpper || !hasLower || !hasDigit || !hasSpecial) {
             throw new IllegalArgumentException(
                 "Le mot de passe doit contenir au moins 12 caractères, dont une majuscule, "
                 + "une minuscule, un chiffre et un caractère spécial."
