@@ -14,7 +14,9 @@ vi.mock("axios", () => ({
   default: {
     create: () => mockInstance,
     isAxiosError: (e: unknown) =>
-      typeof e === "object" && e !== null && (e as { isAxiosError?: boolean }).isAxiosError === true,
+      typeof e === "object" &&
+      e !== null &&
+      (e as { isAxiosError?: boolean }).isAxiosError === true,
   },
 }));
 
@@ -51,7 +53,9 @@ describe("apiService", () => {
     it("renvoie un message générique pour une erreur inconnue", async () => {
       mockInstance.post.mockRejectedValue(new Error("network"));
 
-      await expect(apiService.register({} as never)).rejects.toThrow("Erreur lors de l'inscription");
+      await expect(apiService.register({} as never)).rejects.toThrow(
+        "Erreur lors de l'inscription"
+      );
     });
   });
 
@@ -99,9 +103,7 @@ describe("apiService", () => {
     it("renvoie un message générique sinon", async () => {
       mockInstance.post.mockRejectedValue(new Error("boom"));
 
-      await expect(apiService.activateAccount("x")).rejects.toThrow(
-        "Erreur lors de l'activation"
-      );
+      await expect(apiService.activateAccount("x")).rejects.toThrow("Erreur lors de l'activation");
     });
   });
 

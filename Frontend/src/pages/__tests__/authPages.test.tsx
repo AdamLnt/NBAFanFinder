@@ -39,14 +39,22 @@ beforeEach(() => {
 
 describe("LoginPage", () => {
   it("affiche une erreur si les champs sont vides", () => {
-    render(<MemoryRouter><LoginPage /></MemoryRouter>);
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
     fireEvent.click(screen.getByRole("button", { name: /Se connecter/ }));
     expect(screen.getByText("Veuillez remplir tous les champs")).toBeInTheDocument();
   });
 
   it("connecte l'utilisateur et redirige vers /map", async () => {
     mocked(apiService.login).mockResolvedValue({ id: 1, email: "a@b.com", nom: "D", prenom: "J" });
-    render(<MemoryRouter><LoginPage /></MemoryRouter>);
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
 
     fireEvent.change(screen.getByPlaceholderText("exemple@email.com"), {
       target: { value: "a@b.com", name: "email" },
@@ -62,7 +70,11 @@ describe("LoginPage", () => {
 
   it("affiche le message d'erreur en cas d'échec de connexion", async () => {
     mocked(apiService.login).mockRejectedValue(new Error("Identifiants invalides"));
-    render(<MemoryRouter><LoginPage /></MemoryRouter>);
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
 
     fireEvent.change(screen.getByPlaceholderText("exemple@email.com"), {
       target: { value: "a@b.com", name: "email" },
@@ -76,7 +88,11 @@ describe("LoginPage", () => {
   });
 
   it("navigue vers /register via le lien", () => {
-    render(<MemoryRouter><LoginPage /></MemoryRouter>);
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
     fireEvent.click(screen.getByText("Cliquez ici"));
     expect(mockNavigate).toHaveBeenCalledWith("/register");
   });
@@ -85,7 +101,11 @@ describe("LoginPage", () => {
 describe("HomePage", () => {
   it("redirige vers /login si non authentifié", () => {
     mocked(authService.isAuthenticated).mockReturnValue(false);
-    const { container } = render(<MemoryRouter><HomePage /></MemoryRouter>);
+    const { container } = render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
     expect(container).toBeEmptyDOMElement();
     expect(mockNavigate).toHaveBeenCalledWith("/login");
   });
@@ -98,7 +118,11 @@ describe("HomePage", () => {
       nom: "Dupont",
       prenom: "Jean",
     });
-    render(<MemoryRouter><HomePage /></MemoryRouter>);
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
 
     expect(screen.getByText("Bienvenue !")).toBeInTheDocument();
     expect(screen.getByText("Dupont")).toBeInTheDocument();
@@ -116,14 +140,22 @@ describe("ProfilePage", () => {
       nom: "Dupont",
       prenom: "Jean",
     });
-    render(<MemoryRouter><ProfilePage /></MemoryRouter>);
+    render(
+      <MemoryRouter>
+        <ProfilePage />
+      </MemoryRouter>
+    );
     expect(screen.getByText("Jean Dupont")).toBeInTheDocument();
     expect(screen.getByText("a@b.com")).toBeInTheDocument();
   });
 
   it("affiche des tirets quand aucun utilisateur", () => {
     mocked(authService.getUser).mockReturnValue(null);
-    render(<MemoryRouter><ProfilePage /></MemoryRouter>);
+    render(
+      <MemoryRouter>
+        <ProfilePage />
+      </MemoryRouter>
+    );
     expect(screen.getAllByText("—").length).toBeGreaterThan(0);
   });
 });

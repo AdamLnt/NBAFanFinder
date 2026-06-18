@@ -103,9 +103,9 @@ describe("ChatPage", () => {
     fireEvent.click(await screen.findByTitle("Paramètres du chat"));
     expect(await screen.findByText("Paramètres du chat")).toBeInTheDocument();
 
-    const nameInput = screen.getAllByDisplayValue("Fans Lakers").find((el) =>
-      el.className.includes("modal__input")
-    )!;
+    const nameInput = screen
+      .getAllByDisplayValue("Fans Lakers")
+      .find((el) => el.className.includes("modal__input"))!;
     fireEvent.change(nameInput, { target: { value: "Nouveau nom" } });
     fireEvent.click(screen.getByRole("button", { name: /Enregistrer/ }));
     await waitFor(() =>

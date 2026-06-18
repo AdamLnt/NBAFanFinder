@@ -27,6 +27,8 @@ describe("teamService", () => {
   it("getAll lève une erreur explicite en cas d'échec", async () => {
     mockGet.mockRejectedValue(new Error("500"));
 
-    await expect(teamService.getAll()).rejects.toThrow("Impossible de charger la liste des équipes");
+    await expect(teamService.getAll()).rejects.toThrow(
+      "Impossible de charger la liste des équipes"
+    );
   });
 });

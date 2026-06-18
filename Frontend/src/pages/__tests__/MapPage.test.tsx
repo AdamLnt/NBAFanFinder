@@ -10,9 +10,13 @@ vi.mock("react-router-dom", async (importOriginal) => {
 
 // react-leaflet et leaflet ne fonctionnent pas dans jsdom : on les remplace par des stubs.
 vi.mock("react-leaflet", () => ({
-  MapContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="map">{children}</div>,
+  MapContainer: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="map">{children}</div>
+  ),
   TileLayer: () => null,
-  Marker: ({ children }: { children: React.ReactNode }) => <div data-testid="marker">{children}</div>,
+  Marker: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="marker">{children}</div>
+  ),
   Popup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   Circle: () => <div data-testid="circle" />,
   useMap: () => ({ flyTo: vi.fn() }),
@@ -49,11 +53,20 @@ const otherUser = {
 beforeEach(() => {
   vi.clearAllMocks();
   mocked(teamService.getAll).mockResolvedValue([{ id: 1, nom: "Lakers", ville: "LA" }]);
-  mocked(mapService.getMyLocation).mockResolvedValue({ latitude: 48.86, longitude: 2.35, ville: "Paris" });
+  mocked(mapService.getMyLocation).mockResolvedValue({
+    latitude: 48.86,
+    longitude: 2.35,
+    ville: "Paris",
+  });
   mocked(mapService.getUsers).mockResolvedValue([otherUser]);
 });
 
-const renderPage = () => render(<MemoryRouter><MapPage /></MemoryRouter>);
+const renderPage = () =>
+  render(
+    <MemoryRouter>
+      <MapPage />
+    </MemoryRouter>
+  );
 
 describe("MapPage", () => {
   it("charge les utilisateurs et affiche un marqueur avec popup", async () => {

@@ -8,7 +8,9 @@ vi.mock("react-router-dom", async (importOriginal) => {
   return { ...actual, useNavigate: () => mockNavigate };
 });
 
-vi.mock("../../services/apiService", () => ({ apiService: { register: vi.fn(), logout: vi.fn() } }));
+vi.mock("../../services/apiService", () => ({
+  apiService: { register: vi.fn(), logout: vi.fn() },
+}));
 vi.mock("../../services/teamService", () => ({ teamService: { getAll: vi.fn() } }));
 vi.mock("../../services/geocodingService", () => ({ geocodingService: { search: vi.fn() } }));
 
@@ -39,7 +41,12 @@ beforeEach(() => {
 const fillField = (placeholder: string, value: string, name: string) =>
   fireEvent.change(screen.getByPlaceholderText(placeholder), { target: { value, name } });
 
-const renderPage = () => render(<MemoryRouter><RegisterPage /></MemoryRouter>);
+const renderPage = () =>
+  render(
+    <MemoryRouter>
+      <RegisterPage />
+    </MemoryRouter>
+  );
 
 describe("RegisterPage", () => {
   it("charge et affiche les équipes, et permet de les sélectionner", async () => {
