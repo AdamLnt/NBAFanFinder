@@ -221,7 +221,7 @@ jobs:
           docker load < backend.tar.gz
           docker load < frontend.tar.gz
 
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
