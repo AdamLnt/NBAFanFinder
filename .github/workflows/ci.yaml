@@ -41,7 +41,7 @@ jobs:
         working-directory: Backend
 
       - name: Upload backend coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: backend-coverage
           path: Backend/target/site/jacoco/
@@ -78,7 +78,7 @@ jobs:
         working-directory: Frontend
 
       - name: Upload frontend coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-coverage
           path: Frontend/coverage/
@@ -158,7 +158,7 @@ jobs:
           docker save nbafanfinder-backend:${{ github.sha }} | gzip > backend.tar.gz
           docker save nbafanfinder-frontend:${{ github.sha }} | gzip > frontend.tar.gz
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: docker-images-${{ github.sha }}
           path: |
